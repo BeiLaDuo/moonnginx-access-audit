@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+      - name: Record toolchain
+        run: moon version --all
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Check formatting
+        run: moon fmt --check
+
+      - name: Build
+        run: moon build --target all --deny-warn
+
+      - name: Test
+        run: moon test --target all --deny-warn
+
+      - name: Check
+        run: moon check --target all --deny-warn
+
+      - name: Build the file CLI
+        run: moon build cmd/nginx-cli --target js --release --deny-warn
+
+      - name: Run the portable consumer example
+        run: moon run examples/nginx --target wasm-gc
+
+      - name: Verify actual file workflows
+        run: python tools/verify_files.py --output _build/ci/file-workflow.json
+
+      - name: Install Nginx test dependency
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes nginx
+
+      - name: Compare against real Nginx
+        run: python tools/verify_nginx.py --nginx /usr/sbin/nginx --cli-command-json '["node","tools/cidr-audit.mjs"]' --output _build/ci/nginx-comparison.json
+
+      - name: Measure project-owned MoonBit implementation
+        run: python tools/measure_code.py --minimum 4000 --require-baseline --output _build/ci/code-count.json
+
+      - name: Package inventory
+        run: moon package --list
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: local-verification-reports
+          path: _build/ci/*.json
