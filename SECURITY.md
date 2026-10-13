@@ -2,7 +2,7 @@
 
 ## Project Scope
 
-MoonCIDR Audit is an offline analysis library for ordered IPv4 and CIDR
+MoonNginx Access Audit is an offline analysis library for ordered IPv4 and CIDR
 allow/deny rules.
 
 It helps identify potentially unsafe configurations, including:
@@ -14,7 +14,7 @@ It helps identify potentially unsafe configurations, including:
 - non-canonical CIDR input;
 - risky special address ranges.
 
-MoonCIDR Audit does not configure firewalls, enforce network traffic, access
+MoonNginx Access Audit does not configure firewalls, enforce network traffic, access
 cloud accounts, capture packets, or make network requests.
 
 ## Reporting a Security Issue

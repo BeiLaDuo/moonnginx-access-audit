@@ -1,4 +1,11 @@
-# MoonCIDR Audit
+# MoonNginx Access Audit
+
+Repository: https://github.com/BeiLaDuo/moonnginx-access-audit. Module: `BeiLaDuo/moonnginx-access-audit`.
+Participant and new Git author: 高本乾 <3346147448@qq.com>.
+
+This repository was created as BeiLaDuo/beiladuo with two commits. Those
+commits are preserved; fourteen substantive updates follow the uploaded source.
+See [repository migration](docs/repository-migration.md).
 
 ## October 2026 development: real Nginx configuration audit
 
@@ -12,18 +19,18 @@ Read the [Chinese file CLI guide](docs/nginx-file-cli.md) or run:
 ```powershell
 moon update
 moon build cmd/nginx-cli --target js --release --deny-warn
-node tools/cidr-audit.mjs contexts nginx.conf --root examples/nginx/files --format json
+node tools/moonnginx-access-audit.mjs contexts nginx.conf --root examples/nginx/files --format json
 moon run examples/nginx --target wasm-gc
 ```
 
-The delivery archive includes a precompiled `dist/cidr-audit.js` for Node.js
+The delivery archive includes a precompiled `dist/moonnginx-access-audit.js` for Node.js
 22.13 or newer. The pure analysis library has no filesystem or network side
 effects. A file CLI probe does not claim complete Nginx authorization, and
 unsupported access-relevant semantics block successful analysis.
 
 See [scope and baseline](docs/october-scope.md), [third-party notices](THIRD_PARTY.md),
-and [validation](docs/local-validation.md). The previously published Mooncakes
-version is 0.1.2. Competition registration, remote releases and Mooncakes
+and [validation](docs/local-validation.md). The original MoonCIDR Audit base was published as
+`BeiLaDuo/cidr-audit@0.1.2`. This renamed module has not been published. Competition registration, remote releases and Mooncakes
 publication remain separate user actions.
 
 The update also supports literal dash-prefixed filenames, structured argument
@@ -33,7 +40,7 @@ the shipped CLI with fresh builds on real file workflows. Try the runnable
 risky and unsupported configurations, or review the
 [development record](docs/development-record.md) for this round's changes.
 
-MoonCIDR Audit is a pure MoonBit library for auditing ordered IPv4/CIDR allow
+MoonNginx Access Audit is a pure MoonBit library for auditing ordered IPv4/CIDR allow
 and deny rules. It helps gateway, reverse proxy, cloud security group, and
 operations configuration authors find rule shadowing, dangerous wide ranges,
 non-canonical CIDR input, duplicate rules, and risky special address spaces.
@@ -108,7 +115,7 @@ println(ruleset.decide(ip).summary())
 
 ## Example Findings
 
-MoonCIDR Audit can report findings like:
+MoonNginx Access Audit can report findings like:
 
 ```text
 [critical] too_wide_allow R1: allow rule covers a very wide network: 10.0.0.0/8
@@ -158,7 +165,7 @@ Common functions:
 
 ## Project Boundary
 
-MoonCIDR Audit currently focuses on IPv4 and ordered CIDR rules. It does not
+MoonNginx Access Audit currently focuses on IPv4 and ordered CIDR rules. It does not
 implement IPv6, kernel integration, packet capture, live network access, or
 cloud-provider credentials. Its importers are intentionally offline and
 limited to reviewable text formats. Provider-specific adapters can be added
@@ -167,7 +174,7 @@ later without changing the core audit model.
 ## Hackathon Value
 
 MoonBit already has examples and packages around networking, URLs, sockets, and
-general parsing. MoonCIDR Audit targets a different gap: auditing network rule
+general parsing. MoonNginx Access Audit targets a different gap: auditing network rule
 sets before they are deployed. This is useful for configuration review, CI
 checks, teaching network rule behavior, and building safer MoonBit developer
 tools.

@@ -2,7 +2,7 @@
 
 Example (from the repository root):
   python tools/verify_nginx.py --nginx PATH/nginx.exe \
-    --cli-command-json '["node", "tools/cidr-audit.mjs"]' \
+    --cli-command-json '["node", "tools/moonnginx-access-audit.mjs"]' \
     --output _build/ci/nginx-comparison.json
 
 The fixture serves static files. No `return` or rewrite bypasses access checks.
@@ -25,7 +25,7 @@ import time
 from typing import Any
 
 
-BODY = b"MoonCIDR integration fixture\n"
+BODY = b"MoonNginx Access Audit integration fixture\n"
 CONTEXT_ARGS = ["contexts", "{config}", "--root", "{root}", "--format", "json"]
 PROBE_ARGS = [
     "probe", "{config}", "{ip}", "--root", "{root}",

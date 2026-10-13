@@ -60,7 +60,7 @@ test "diff text report includes summary" {
   let previous = RuleSet::from_lines(["allow 10.0.0.0/8"])
   let current = RuleSet::from_lines(["deny 10.0.0.0/8"])
   let text = current.diff_from(previous).text_report()
-  inspect(text.contains("MoonCIDR diff report"), content="true")
+  inspect(text.contains("MoonNginx Access Audit diff report"), content="true")
   inspect(text.contains("action_changed"), content="true")
 }
 

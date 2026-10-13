@@ -7,7 +7,7 @@
 - https://github.com/lzh123411/21341 已有 IPv4 有序 ACL、重叠诊断和基础 IPv6。地址解析与普通 ACL 不能作为本轮新增贡献。
 - https://github.com/hutingyu-nuist/moonpolicyproof 已基于 cidr-audit 提供五元组语义差异、反例和断言。本轮不重复开发该范围。
 - https://github.com/LuoYunxin1/moonnginx 已有 nginx.conf 配置树编解码。本轮直接复用其 0.2.0，不另写通用 lexer/parser，也不把依赖行数计入自有实现。
-- 本仓库已发布 BeiLaDuo/cidr-audit@0.1.2。基线的解析、规则审计、聚合和指令导入不作为全新项目申报。
+- 旧项目 MoonCIDR Audit 已发布 BeiLaDuo/cidr-audit@0.1.2；新包尚未发布。基线的解析、规则审计、聚合和指令导入不作为全新项目申报。
 
 ## 本轮实质新增
 

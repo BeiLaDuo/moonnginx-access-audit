@@ -8,7 +8,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const candidates = [
   resolve(root, '_build', 'js', 'release', 'build', 'cmd', 'nginx-cli', 'nginx-cli.js'),
   resolve(root, '_build', 'js', 'debug', 'build', 'cmd', 'nginx-cli', 'nginx-cli.js'),
-  resolve(root, 'dist', 'cidr-audit.js'),
+  resolve(root, 'dist', 'moonnginx-access-audit.js'),
 ];
 const entry = candidates.find(existsSync);
 if (!entry) {

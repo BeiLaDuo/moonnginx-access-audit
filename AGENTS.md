@@ -1,7 +1,8 @@
 # Project Instructions
 
-This repository contains the existing MoonCIDR Audit library and its October
-2026 offline Nginx HTTP IPv4 analysis extension.
+This is MoonNginx Access Audit, created in BeiLaDuo/beiladuo. Preserve its
+two initial commits. The original MoonCIDR Audit base belongs to a separate
+repository and must not be pushed to or renamed as part of this project.
 
 ## Identity
 
@@ -35,7 +36,7 @@ After `moon fmt`, inspect generated public API files such as
 
 ## Scope
 
-MoonCIDR Audit is an IPv4/CIDR rule audit library. Keep the core library
+MoonNginx Access Audit is an IPv4/CIDR rule audit library. Keep the core library
 focused on parsing, normalization, first-match decisions, overlap and shadowing
 analysis, offline rule import, CIDR aggregation, coverage analysis, policy
 presets, deployment gates, and report output.

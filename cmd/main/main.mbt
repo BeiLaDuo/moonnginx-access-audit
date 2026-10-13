@@ -22,7 +22,7 @@ fn print_probe(ruleset : @cidr.RuleSet, ip : String) -> Unit {
 fn main {
   let ruleset = demo_gateway_rules()
   let report = ruleset.audit()
-  println("MoonCIDR Audit demo")
+  println("MoonNginx Access Audit demo")
   println("")
   println(ruleset.inventory_report())
   println(report.text_report())

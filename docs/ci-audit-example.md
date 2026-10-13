@@ -16,8 +16,8 @@
 本地执行同一示例：
 
 ```powershell
-node tools/cidr-audit.mjs audit safe.conf --root examples/ci --format json
-node tools/cidr-audit.mjs audit warning.conf --root examples/ci --strict --format json
+node tools/moonnginx-access-audit.mjs audit safe.conf --root examples/ci --format json
+node tools/moonnginx-access-audit.mjs audit warning.conf --root examples/ci --strict --format json
 python tools/verify_ci_examples.py
 ```
 

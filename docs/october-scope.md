@@ -1,13 +1,24 @@
-# October 2026 development scope
+# October 2026 project scope
 
-Baseline: `414e476efa463737164e5d5e1b2345bccd01148f`, module version 0.1.2.
+Correct repository: originally BeiLaDuo/beiladuo, repository ID 1416877460.
+The user explicitly requested renaming this repository to moonnginx-access-audit.
+Keep its two existing commits through `1fc7d9c7e57f891838b560cb25248f1693808804`.
 
-Version 0.2.0 adds an offline Nginx HTTP IPv4 address-rule adapter and a real-file command-line workflow. It builds on the existing CIDR library and the Apache-2.0 `LuoYunxin1/moonnginx@0.2.0` directive-tree codec. Neither the previous IPv4 implementation nor the upstream parser is presented as new work.
+The upload already contains the first Nginx development delivery, derived from
+MoonCIDR Audit v0.1.2 in a separate repository. Later changes add actual CLI
+behavior, stronger file boundaries, reproducible CI and the renamed module.
+Neither the CIDR base nor the Apache-2.0 moonnginx parser is presented as new work.
 
-The adapter models ordered rules, contextual inheritance, source provenance, an explicit offline include bundle, and bounded analysis. Structural context selectors avoid guessing Nginx URL routing. An unmatched address rule means the access module imposes no address restriction, not that a complete request is authorized.
+Only offline HTTP IPv4 allow/deny semantics, structural contexts, source
+provenance, bounded includes and audit reports are modeled. Full routing,
+IPv6 and combined authorization remain outside the supported scope.
 
-No network access, server configuration deployment, firewall changes, cloud credentials, or live Nginx process control belong in the library. A separate test tool may start its own temporary Nginx service to check the supported semantics.
+New author/committer: 高本乾 <3346147448@qq.com>. Original commit metadata
+is preserved. The user authorized GitHub synchronization and renaming, with
+at least fourteen meaningful commits in the repository and 4,000 effective
+MoonBit implementation lines. No competition registration or publication
+was requested. The separate old MoonCIDR repository was restored.
 
-The user authorized synchronizing the development update to the BeiLaDuo/mooncidr-audit GitHub repository. Registration, Mooncakes publication, and remote releases remain outside that authorization. The confirmed application participant and new Git author/committer are 高本乾, with contact and new commit email 3346147448@qq.com. The seven baseline commits remain unchanged.
-
-Official October rules were checked at https://github.com/moonbitlang/Hackathon2026/blob/main/src/App.tsx on 2026-10-13. The displayed registration and acceptance deadline is 2026-10-31; existing projects may enter with substantive new work. The user additionally requires at least 4,000 effective MoonBit implementation lines and at least fourteen meaningful commits. Code, tests, dependencies, and previous work are counted separately.
+October rules were checked on 2026-10-13 at
+https://github.com/moonbitlang/Hackathon2026/blob/main/src/App.tsx.
+The displayed deadline is 2026-10-31; existing projects need substantive new work.

@@ -1,7 +1,7 @@
 import {
-  "BeiLaDuo/cidr-audit/cli",
-  "BeiLaDuo/cidr-audit/fileio",
-  "BeiLaDuo/cidr-audit/nginx",
+  "BeiLaDuo/moonnginx-access-audit/cli",
+  "BeiLaDuo/moonnginx-access-audit/fileio",
+  "BeiLaDuo/moonnginx-access-audit/nginx",
 }
 
 supported_targets = "js"

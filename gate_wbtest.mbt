@@ -71,7 +71,7 @@ test "gate report explains blocking reasons" {
   inspect(
     result.text_report(),
     content=(
-      #|MoonCIDR deployment gate
+      #|MoonNginx Access Audit deployment gate
       #|policy: release
       #|decision: fail
       #|risk_score: 10

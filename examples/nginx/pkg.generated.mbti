@@ -1,5 +1,5 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "BeiLaDuo/cidr-audit/examples/nginx"
+package "BeiLaDuo/moonnginx-access-audit/examples/nginx"
 
 // Values
 

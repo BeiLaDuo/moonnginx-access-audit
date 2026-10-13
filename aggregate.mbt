@@ -82,7 +82,7 @@ pub fn AggregationReport::summary(self : AggregationReport) -> String {
 
 ///|
 pub fn AggregationReport::text_report(self : AggregationReport) -> String {
-  let mut output = "MoonCIDR aggregation report\n"
+  let mut output = "MoonNginx Access Audit aggregation report\n"
   output = output + self.summary() + "\n"
   if self.blocks.length() > 0 {
     output = output + "\nAggregated blocks:\n"

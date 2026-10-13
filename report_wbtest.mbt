@@ -2,7 +2,7 @@
 test "text report includes important summary fields" {
   let report = RuleSet::from_lines(["allow 10.0.0.0/8", "deny 10.1.2.0/24"]).audit()
   let text = report.text_report()
-  inspect(text.contains("MoonCIDR Audit report"), content="true")
+  inspect(text.contains("MoonNginx Access Audit report"), content="true")
   inspect(text.contains("shadowed_rule"), content="true")
   inspect(text.contains("fix_before_release"), content="true")
 }

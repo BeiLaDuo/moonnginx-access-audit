@@ -214,7 +214,7 @@ pub fn GateResult::has_reason(self : GateResult, code : String) -> Bool {
 
 ///|
 pub fn GateResult::text_report(self : GateResult) -> String {
-  let mut output = "MoonCIDR deployment gate\n"
+  let mut output = "MoonNginx Access Audit deployment gate\n"
   output = output + "policy: " + self.policy.name() + "\n"
   output = output + "decision: " + self.decision() + "\n"
   output = output + "risk_score: " + self.risk_score.to_string() + "\n"

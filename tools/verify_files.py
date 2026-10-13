@@ -439,7 +439,7 @@ def verify(runner: Runner) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--cli-command-json", type=command_list, default=["node", "tools/cidr-audit.mjs"])
+    parser.add_argument("--cli-command-json", type=command_list, default=["node", "tools/moonnginx-access-audit.mjs"])
     parser.add_argument("--output", type=Path, default=Path("_build/ci/file-workflow.json"))
     options = parser.parse_args()
     output = options.output if options.output.is_absolute() else REPOSITORY / options.output

@@ -87,7 +87,7 @@ test "aggregation report renders invalid and valid sections" {
   inspect(
     report.text_report(),
     content=(
-      #|MoonCIDR aggregation report
+      #|MoonNginx Access Audit aggregation report
       #|input=3, valid=2, output=1, duplicates=0, contained=0, merged_pairs=1, errors=1
       #|
       #|Aggregated blocks:

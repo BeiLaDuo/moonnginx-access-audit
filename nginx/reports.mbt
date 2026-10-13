@@ -224,7 +224,7 @@ fn diagnostic_text(item : Diagnostic) -> String {
 
 ///|
 fn text_header(analysis : Analysis) -> String {
-  "MoonCIDR Nginx IPv4 audit\n" +
+  "MoonNginx Access Audit Nginx IPv4 audit\n" +
   "Entry: " +
   analysis.entry +
   "\n" +

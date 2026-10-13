@@ -1,5 +1,5 @@
 import {
-  "BeiLaDuo/cidr-audit" @cidr,
+  "BeiLaDuo/moonnginx-access-audit" @cidr,
 }
 
 pkgtype(kind: "executable")

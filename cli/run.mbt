@@ -8,16 +8,16 @@ pub(all) struct CliResult {
 ///|
 pub fn help_text() -> String {
   (
-    #|MoonCIDR Audit - offline Nginx IPv4 address-access analysis
+    #|MoonNginx Access Audit - offline Nginx IPv4 address-access analysis
     #|
     #|Usage:
-    #|  mooncidr contexts CONFIG [OPTIONS]
-    #|  mooncidr audit CONFIG [--context ID] [--strict] [OPTIONS]
-    #|  mooncidr probe CONFIG IP --context ID [OPTIONS]
-    #|  mooncidr validate CONFIG [OPTIONS]
-    #|  mooncidr help
-    #|  mooncidr version
-    #|  mooncidr COMMAND --help
+    #|  moonnginx-access-audit contexts CONFIG [OPTIONS]
+    #|  moonnginx-access-audit audit CONFIG [--context ID] [--strict] [OPTIONS]
+    #|  moonnginx-access-audit probe CONFIG IP --context ID [OPTIONS]
+    #|  moonnginx-access-audit validate CONFIG [OPTIONS]
+    #|  moonnginx-access-audit help
+    #|  moonnginx-access-audit version
+    #|  moonnginx-access-audit COMMAND --help
     #|
     #|Options:
     #|  --root DIRECTORY     Local input root, default '.'
@@ -107,7 +107,7 @@ pub fn run(options : Options, sources : Array[@nginx.SourceFile]) -> CliResult {
     return complete(0, help_text())
   }
   if options.command == Version {
-    return complete(0, "MoonCIDR Audit Nginx analyzer 0.2.0\n")
+    return complete(0, "MoonNginx Access Audit Nginx analyzer 0.2.0\n")
   }
   // Public Options may also be constructed directly by library callers.
   match validate_entry(options.entry) {

@@ -87,7 +87,7 @@ pub fn AuditReport::fix_hints(self : AuditReport) -> Array[FixHint] {
 ///|
 pub fn AuditReport::hint_report(self : AuditReport) -> String {
   let hints = self.fix_hints()
-  let mut output = "MoonCIDR remediation hints\n"
+  let mut output = "MoonNginx Access Audit remediation hints\n"
   output = output + "hints: " + hints.length().to_string() + "\n"
   if hints.length() == 0 {
     output + "\nNo hints."

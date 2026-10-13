@@ -31,7 +31,7 @@ jobs:
         run: |
           args=()
           if [ "$STRICT" = "true" ]; then args+=(--strict); fi
-          node tools/cidr-audit.mjs audit "$POLICY.conf" --root examples/ci --format json "${args[@]}" >audit.json 2>diagnostics.json
+          node tools/moonnginx-access-audit.mjs audit "$POLICY.conf" --root examples/ci --format json "${args[@]}" >audit.json 2>diagnostics.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:

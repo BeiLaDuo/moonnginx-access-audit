@@ -22,7 +22,7 @@ def main() -> int:
     ]
     cases = []
     for policy, strict, expected, expected_code in scenarios:
-        command = ["node", "tools/cidr-audit.mjs", "audit", policy + ".conf",
+        command = ["node", "tools/moonnginx-access-audit.mjs", "audit", policy + ".conf",
                    "--root", "examples/ci", "--format", "json"] + (["--strict"] if strict else [])
         completed = subprocess.run(command, cwd=ROOT, capture_output=True, encoding="utf-8",
                                    timeout=30, **hidden_process_options())

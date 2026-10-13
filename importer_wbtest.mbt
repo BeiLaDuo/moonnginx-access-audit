@@ -99,7 +99,7 @@ test "import report renders rules and issues" {
   inspect(
     report.text_report(),
     content=(
-      #|MoonCIDR import report
+      #|MoonNginx Access Audit import report
       #|format=nginx_access, source_lines=2, accepted=1, warnings=0, errors=1
       #|
       #|Imported rules:

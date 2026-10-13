@@ -68,7 +68,7 @@ jobs:
           sudo apt-get install --yes nginx
 
       - name: Compare against real Nginx
-        run: python tools/verify_nginx.py --nginx /usr/sbin/nginx --cli-command-json '["node","tools/cidr-audit.mjs"]' --output _build/ci/nginx-comparison.json
+        run: python tools/verify_nginx.py --nginx /usr/sbin/nginx --cli-command-json '["node","tools/moonnginx-access-audit.mjs"]' --output _build/ci/nginx-comparison.json
 
       - name: Measure project-owned MoonBit implementation
         run: python tools/measure_code.py --minimum 4000 --require-baseline --output _build/ci/code-count.json

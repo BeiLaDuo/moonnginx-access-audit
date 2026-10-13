@@ -78,6 +78,6 @@ test "first rule for block finds overlap" {
 test "inventory report lists rules" {
   let ruleset = RuleSet::from_lines(["allow 10.0.0.0/8"])
   let report = ruleset.inventory_report()
-  inspect(report.contains("MoonCIDR inventory"), content="true")
+  inspect(report.contains("MoonNginx Access Audit inventory"), content="true")
   inspect(report.contains("R1: allow 10.0.0.0/8"), content="true")
 }

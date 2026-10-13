@@ -134,7 +134,7 @@ test "coverage report includes holes and action" {
   inspect(
     report,
     content=(
-      #|MoonCIDR coverage report
+      #|MoonNginx Access Audit coverage report
       #|action: allow
       #|target: 10.0.0.0/24
       #|merged_ranges: 1

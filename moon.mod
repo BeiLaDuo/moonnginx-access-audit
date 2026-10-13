@@ -1,7 +1,7 @@
 // Learn more about moon.mod configuration:
 // https://docs.moonbitlang.com/en/latest/toolchain/moon/module.html
 
-name = "BeiLaDuo/cidr-audit"
+name = "BeiLaDuo/moonnginx-access-audit"
 
 version = "0.2.0"
 
@@ -11,7 +11,7 @@ import {
 
 readme = "README.md"
 
-repository = "https://github.com/BeiLaDuo/mooncidr-audit"
+repository = "https://github.com/BeiLaDuo/moonnginx-access-audit"
 
 license = "Apache-2.0"
 

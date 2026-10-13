@@ -52,7 +52,10 @@ test "hints convert overlap findings" {
 test "hint report includes summary" {
   let report = RuleSet::from_lines(["deny 0.0.0.0/0"]).audit()
   let text = report.hint_report()
-  inspect(text.contains("MoonCIDR remediation hints"), content="true")
+  inspect(
+    text.contains("MoonNginx Access Audit remediation hints"),
+    content="true",
+  )
   inspect(text.contains("confirm_default_policy"), content="true")
 }
 

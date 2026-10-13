@@ -172,7 +172,7 @@ pub fn ImportReport::summary(self : ImportReport) -> String {
 
 ///|
 pub fn ImportReport::text_report(self : ImportReport) -> String {
-  let mut output = "MoonCIDR import report\n"
+  let mut output = "MoonNginx Access Audit import report\n"
   output = output + self.summary() + "\n"
   if self.rules.length() > 0 {
     output = output + "\nImported rules:\n"

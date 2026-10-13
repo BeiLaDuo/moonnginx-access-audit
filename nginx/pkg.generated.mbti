@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "BeiLaDuo/cidr-audit/nginx"
+package "BeiLaDuo/moonnginx-access-audit/nginx"
 
 import {
-  "BeiLaDuo/cidr-audit",
+  "BeiLaDuo/moonnginx-access-audit",
   "LuoYunxin1/moonnginx",
   "moonbitlang/core/debug",
 }
@@ -50,7 +50,7 @@ pub fn AccessContext::equal(Self, Self) -> Bool
 pub fn AccessContext::has_blocking(Self) -> Bool
 pub fn AccessContext::not_equal(Self, Self) -> Bool
 pub fn AccessContext::probe(Self, String) -> Result[ProbeResult, ConfigError]
-pub fn AccessContext::probe_ipv4(Self, @cidr-audit.IPv4) -> Result[ProbeResult, ConfigError]
+pub fn AccessContext::probe_ipv4(Self, @moonnginx-access-audit.IPv4) -> Result[ProbeResult, ConfigError]
 pub fn AccessContext::to_repr(Self) -> @debug.Repr
 
 pub(all) enum AccessOutcome {
@@ -64,7 +64,7 @@ pub fn AccessOutcome::not_equal(Self, Self) -> Bool
 pub fn AccessOutcome::to_repr(Self) -> @debug.Repr
 
 pub(all) struct AccessRule {
-  rule : @cidr-audit.Rule
+  rule : @moonnginx-access-audit.Rule
   source : SourceLocation
   owner_context : String
   raw_operand : String
@@ -91,7 +91,7 @@ pub fn Analysis::to_repr(Self) -> @debug.Repr
 
 pub(all) struct AuditFinding {
   code : String
-  severity : @cidr-audit.Severity
+  severity : @moonnginx-access-audit.Severity
   message : String
   rule_id : String
   related_rule_ids : Array[String]
@@ -127,7 +127,7 @@ pub fn ContextAudit::warning_count(Self) -> Int
 
 pub(all) struct Diagnostic {
   code : String
-  severity : @cidr-audit.Severity
+  severity : @moonnginx-access-audit.Severity
   blocking : Bool
   message : String
   source : SourceLocation?

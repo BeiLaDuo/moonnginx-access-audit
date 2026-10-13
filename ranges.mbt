@@ -266,7 +266,7 @@ pub fn RuleSet::coverage_report(
   let all_coverage = self.coverage_ranges(action)
   let coverage = clip_ranges_to_block(target, all_coverage)
   let holes = uncovered_ranges(target, all_coverage)
-  let mut output = "MoonCIDR coverage report\n"
+  let mut output = "MoonNginx Access Audit coverage report\n"
   output = output + "action: " + action.label() + "\n"
   output = output + "target: " + target.to_string() + "\n"
   output = output + "merged_ranges: " + coverage.length().to_string() + "\n"

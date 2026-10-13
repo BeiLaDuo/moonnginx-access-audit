@@ -139,7 +139,7 @@ pub fn DiffReport::risk_level(self : DiffReport) -> String {
 
 ///|
 pub fn DiffReport::text_report(self : DiffReport) -> String {
-  let mut output = "MoonCIDR diff report\n"
+  let mut output = "MoonNginx Access Audit diff report\n"
   output = output + "changes: " + self.change_count().to_string() + "\n"
   output = output + "risky_changes: " + self.risky_count().to_string() + "\n"
   output = output + "risk: " + self.risk_level() + "\n"

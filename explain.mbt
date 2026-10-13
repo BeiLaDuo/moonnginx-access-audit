@@ -176,7 +176,7 @@ pub fn RuleSet::first_rule_for_block(
 ///|
 pub fn RuleSet::inventory_report(self : RuleSet) -> String {
   let stats = self.coverage_stats()
-  let mut output = "MoonCIDR inventory\n"
+  let mut output = "MoonNginx Access Audit inventory\n"
   output = output + stats.summary() + "\n"
   output = output + "rules:\n"
   for rule in self.rules {

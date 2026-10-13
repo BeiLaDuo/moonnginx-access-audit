@@ -128,7 +128,7 @@ def main() -> int:
     parser.add_argument("--minimum", type=int, default=4000)
     parser.add_argument("--output", type=Path)
     # The standalone repository starts with the user's uploaded source. The
-    # earlier MoonCIDR revision belongs to a separate preserved repository.
+    # earlier MoonNginx Access Audit revision belongs to a separate preserved repository.
     parser.add_argument("--baseline", default="1fc7d9c7e57f891838b560cb25248f1693808804")
     parser.add_argument("--require-baseline", action="store_true")
     args = parser.parse_args()

@@ -1,7 +1,7 @@
 ///|
 /// Builds a compact human-readable audit report.
 pub fn AuditReport::text_report(self : AuditReport) -> String {
-  let mut output = "MoonCIDR Audit report\n"
+  let mut output = "MoonNginx Access Audit report\n"
   output = output + "rules: " + self.rules.length().to_string() + "\n"
   output = output + "findings: " + self.finding_count().to_string() + "\n"
   output = output +

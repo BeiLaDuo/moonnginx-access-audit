@@ -10,7 +10,7 @@ import verify_files as workflows
 
 ROOT = Path(__file__).resolve().parent.parent
 BUILD = Path("_build/js/release/build/cmd/nginx-cli/nginx-cli.js")
-BUNDLE = Path("dist/cidr-audit.js")
+BUNDLE = Path("dist/moonnginx-access-audit.js")
 
 
 def comparable(case: dict, scratch: Path) -> dict:

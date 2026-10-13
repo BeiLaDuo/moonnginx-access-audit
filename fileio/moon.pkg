@@ -1,5 +1,5 @@
 import {
-  "BeiLaDuo/cidr-audit/nginx",
+  "BeiLaDuo/moonnginx-access-audit/nginx",
   "LuoYunxin1/moonnginx" @ngx,
   "moonbitlang/core/json",
 }

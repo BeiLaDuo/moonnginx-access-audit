@@ -4,18 +4,18 @@
 
 ## 运行
 
-需要 Node.js 22.13 或更新版本。交付包自带 `dist/cidr-audit.js`，因此可直接运行：
+需要 Node.js 22.13 或更新版本。交付包自带 `dist/moonnginx-access-audit.js`，因此可直接运行：
 
 ```powershell
-node tools/cidr-audit.mjs contexts nginx.conf --root examples/nginx/files --format json
+node tools/moonnginx-access-audit.mjs contexts nginx.conf --root examples/nginx/files --format json
 ```
 
 从报告找到 `/health` 对应的 `selector`，然后指定该值查询地址。比如该示例使用：
 
 ```powershell
-node tools/cidr-audit.mjs probe nginx.conf 127.0.0.1 --root examples/nginx/files --context "http[1]/server[1]/location[2]" --format json
-node tools/cidr-audit.mjs audit nginx.conf --root examples/nginx/files --format markdown
-node tools/cidr-audit.mjs validate nginx.conf --root examples/nginx/files --format json
+node tools/moonnginx-access-audit.mjs probe nginx.conf 127.0.0.1 --root examples/nginx/files --context "http[1]/server[1]/location[2]" --format json
+node tools/moonnginx-access-audit.mjs audit nginx.conf --root examples/nginx/files --format markdown
+node tools/moonnginx-access-audit.mjs validate nginx.conf --root examples/nginx/files --format json
 ```
 
 `CONFIG` 必须是 `--root` 内的相对路径。`--root` 是文件读取范围；Nginx 相对 include 则以 **主配置文件所在目录** 为基准。二者在主配置位于子目录时不同。本版文件 CLI 的 include 目标还须位于主配置目录或其子目录；跨父目录和绝对 include 路径明确拒绝。工具只读取主配置和 include 实际引用的文件，不扫描无关文件内容。
@@ -25,7 +25,7 @@ node tools/cidr-audit.mjs validate nginx.conf --root examples/nginx/files --form
 ```powershell
 moon update
 moon build cmd/nginx-cli --target js --release --deny-warn
-node tools/cidr-audit.mjs help
+node tools/moonnginx-access-audit.mjs help
 ```
 
 CLI 优先使用 `_build` 中的 release 构建，其次使用 debug 构建，最后使用交付包的 `dist` 文件。从源码开发时使用上面的 release 构建命令。
@@ -67,7 +67,7 @@ probe 的 IPv4 参数在读取配置前校验。错误地址始终报告 `invali
 默认：64 个源文件，合计 1,048,576 个 UTF-16 字符，单源 262,144 字符，include 深度 16、展开 256，配置深度 32、节点 20,000、上下文 2,048、规则 4,096、审计工作 1,000,000。目录扫描使用节点预算并缓存目录列表。报告也使用 `max_directives` 限制展开后的规则、诊断及关联规则条目，防止大量子级继承同一列表时产生巨大的 JSON；超限时返回 4。
 
 ```powershell
-node tools/cidr-audit.mjs audit nginx.conf --root examples/nginx/files --limits max_sources=32,max_include_depth=8 --format json
+node tools/moonnginx-access-audit.mjs audit nginx.conf --root examples/nginx/files --limits max_sources=32,max_include_depth=8 --format json
 ```
 
 真实文件回归无需 Nginx：
@@ -76,14 +76,16 @@ node tools/cidr-audit.mjs audit nginx.conf --root examples/nginx/files --limits 
 python tools/verify_files.py --output _build/ci/file-workflow.json
 ```
 
-维护者更新 CLI 后，需要同步 `dist/cidr-audit.js`，然后运行 `python tools/verify_distribution.py`。该工具将完整真实文件场景分别运行于新构建与交付脚本，逐项比较退出码、stdout 和 stderr；CI 会拒绝行为不一致的交付脚本。
+维护者更新 CLI 后，需要同步 `dist/moonnginx-access-audit.js`，然后运行 `python tools/verify_distribution.py`。该工具将完整真实文件场景分别运行于新构建与交付脚本，逐项比较退出码、stdout 和 stderr；CI 会拒绝行为不一致的交付脚本。
 
 真实服务对照需要另外安装 Nginx；脚本只创建自己的临时服务与静态文件，并在结束时关闭它：
 
 ```powershell
-python tools/verify_nginx.py --nginx C:/tools/nginx/nginx.exe --cli-command-json '["node","tools/cidr-audit.mjs"]' --output _build/ci/nginx-comparison.json
+python tools/verify_nginx.py --nginx C:/tools/nginx/nginx.exe --cli-command-json '["node","tools/moonnginx-access-audit.mjs"]' --output _build/ci/nginx-comparison.json
 ```
 
 本机交付验证使用 MoonBit 0.10.15、Node.js 24.19.0 和官方 Nginx Windows 1.30.5。文件 CLI 的已验证运行方式为 Node.js；纯库在本地测试 JavaScript、Wasm、Wasm GC。Windows 缺少 MSVC/Windows SDK，未执行 Windows native 二进制构建与测试。
 
-Ubuntu CI 已通过四目标构建和测试，每个目标 160 项测试全部通过，包括 native；真实文件场景 29 项全部通过、无跳过。交付 CLI 行为对照、CI 示例及真实 Nginx 对照也通过。[查看已通过的远端验证记录](https://github.com/BeiLaDuo/mooncidr-audit/actions/runs/38394157012)。
+当前提交的 Ubuntu 四目标验证见[本仓库 CI](https://github.com/BeiLaDuo/moonnginx-access-audit/actions/workflows/ci.yml)。
+
+无需准备配置文件即可运行 `node tools/moonnginx-access-audit.mjs audit --help`；`--` 后同名文件仍按字面路径处理。
