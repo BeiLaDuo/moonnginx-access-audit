@@ -1,0 +1,17 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "BeiLaDuo/cidr-audit/fileio"
+
+import {
+  "BeiLaDuo/cidr-audit/nginx",
+}
+
+// Values
+pub fn load_sources(String, String, @nginx.Limits) -> Result[Array[@nginx.SourceFile], @nginx.ConfigError]
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

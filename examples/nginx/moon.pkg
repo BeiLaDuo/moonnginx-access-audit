@@ -1,0 +1,5 @@
+import {
+  "BeiLaDuo/cidr-audit/nginx" @adapter,
+}
+
+pkgtype(kind: "executable")

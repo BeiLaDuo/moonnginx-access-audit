@@ -1,0 +1,9 @@
+import {
+  "BeiLaDuo/cidr-audit/cli",
+  "BeiLaDuo/cidr-audit/fileio",
+  "BeiLaDuo/cidr-audit/nginx",
+}
+
+supported_targets = "js"
+
+pkgtype(kind: "executable")

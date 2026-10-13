@@ -1,0 +1,14 @@
+[
+  {"id":"server-rules-inherited", "host":"own.test", "location":"/inherited/", "source":"127.0.0.1"},
+  {"id":"server-rules-deny-other-loopback", "host":"own.test", "location":"/inherited/", "source":"127.0.0.2"},
+  {"id":"location-replaces-server-rules", "host":"own.test", "location":"/override-deny/", "source":"127.0.0.1"},
+  {"id":"unmatched-access-declines", "host":"own.test", "location":"/unmatched/", "source":"127.0.0.1"},
+  {"id":"first-allow-stops-before-deny-all", "host":"own.test", "location":"/first-allow/", "source":"127.0.0.1"},
+  {"id":"first-allow-cidr-covers-other-loopback", "host":"own.test", "location":"/first-allow/", "source":"127.0.0.2"},
+  {"id":"first-deny-stops-before-allow", "host":"own.test", "location":"/first-deny/", "source":"127.0.0.1"},
+  {"id":"next-allow-after-unmatched-deny", "host":"own.test", "location":"/first-deny/", "source":"127.0.0.2"},
+  {"id":"nested-location-replaces-parent", "host":"own.test", "location":"/nested/open/", "source":"127.0.0.1"},
+  {"id":"nested-unmatched-does-not-fall-back", "host":"own.test", "location":"/nested/open/", "source":"127.0.0.2"},
+  {"id":"nested-location-inherits-parent", "host":"own.test", "location":"/nested/inherited/", "source":"127.0.0.1"},
+  {"id":"server-inherits-http-access", "host":"inherited.test", "location":"/http-inherited/", "source":"127.0.0.1"}
+]

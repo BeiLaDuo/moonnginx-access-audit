@@ -1,0 +1,195 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "BeiLaDuo/cidr-audit/nginx"
+
+import {
+  "BeiLaDuo/cidr-audit",
+  "LuoYunxin1/moonnginx",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn analyze_nginx_sources(String, Array[SourceFile], limits? : Limits) -> Result[Analysis, ConfigError]
+
+pub fn check_report_budget(Analysis, String?, Int, audits? : Array[ContextAudit]) -> Result[Unit, ConfigError]
+
+pub fn include_path_matches(String, String) -> Bool
+
+pub fn normalize_source_path(String) -> Result[String, ConfigError]
+
+pub fn parse_source_file(SourceFile, Limits) -> Result[Array[@moonnginx.Directive], ConfigError]
+
+pub fn render_analysis(Analysis, String, String?) -> String
+
+pub fn render_audits(Analysis, Array[ContextAudit], String, String?) -> String
+
+pub fn render_contexts(Analysis, String) -> String
+
+pub fn render_error(ConfigError, String) -> String
+
+pub fn render_probe(ProbeResult, String) -> String
+
+pub fn resolve_include_path(String, String) -> Result[String, ConfigError]
+
+// Errors
+
+// Types and methods
+pub(all) struct AccessContext {
+  selector : String
+  kind : String
+  label : String
+  source : SourceLocation
+  parent : String?
+  inherited_from : String?
+  declared_rules : Array[AccessRule]
+  rules : Array[AccessRule]
+  diagnostics : Array[Diagnostic]
+  audit_pair_budget : Int
+} derive(Eq, @debug.Debug)
+pub fn AccessContext::audit(Self) -> Result[ContextAudit, ConfigError]
+pub fn AccessContext::equal(Self, Self) -> Bool
+pub fn AccessContext::has_blocking(Self) -> Bool
+pub fn AccessContext::not_equal(Self, Self) -> Bool
+pub fn AccessContext::probe(Self, String) -> Result[ProbeResult, ConfigError]
+pub fn AccessContext::probe_ipv4(Self, @cidr-audit.IPv4) -> Result[ProbeResult, ConfigError]
+pub fn AccessContext::to_repr(Self) -> @debug.Repr
+
+pub(all) enum AccessOutcome {
+  Allowed
+  Denied
+  Unrestricted
+} derive(Eq, @debug.Debug)
+pub fn AccessOutcome::equal(Self, Self) -> Bool
+pub fn AccessOutcome::label(Self) -> String
+pub fn AccessOutcome::not_equal(Self, Self) -> Bool
+pub fn AccessOutcome::to_repr(Self) -> @debug.Repr
+
+pub(all) struct AccessRule {
+  rule : @cidr-audit.Rule
+  source : SourceLocation
+  owner_context : String
+  raw_operand : String
+} derive(Eq, @debug.Debug)
+pub fn AccessRule::equal(Self, Self) -> Bool
+pub fn AccessRule::not_equal(Self, Self) -> Bool
+pub fn AccessRule::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Analysis {
+  entry : String
+  scope : String
+  sources : Array[String]
+  include_edges : Array[IncludeEdge]
+  contexts : Array[AccessContext]
+  diagnostics : Array[Diagnostic]
+  audit_pair_budget : Int
+} derive(Eq, @debug.Debug)
+pub fn Analysis::audits(Self) -> Result[Array[ContextAudit], ConfigError]
+pub fn Analysis::context(Self, String) -> Result[AccessContext, ConfigError]
+pub fn Analysis::equal(Self, Self) -> Bool
+pub fn Analysis::has_blocking(Self) -> Bool
+pub fn Analysis::not_equal(Self, Self) -> Bool
+pub fn Analysis::to_repr(Self) -> @debug.Repr
+
+pub(all) struct AuditFinding {
+  code : String
+  severity : @cidr-audit.Severity
+  message : String
+  rule_id : String
+  related_rule_ids : Array[String]
+  source : SourceLocation
+  context : String
+} derive(Eq, @debug.Debug)
+pub fn AuditFinding::equal(Self, Self) -> Bool
+pub fn AuditFinding::not_equal(Self, Self) -> Bool
+pub fn AuditFinding::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ConfigError {
+  code : String
+  message : String
+  path : String
+  line : Int
+} derive(Eq, @debug.Debug)
+pub fn ConfigError::equal(Self, Self) -> Bool
+pub fn ConfigError::not_equal(Self, Self) -> Bool
+pub fn ConfigError::summary(Self) -> String
+pub fn ConfigError::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ContextAudit {
+  context : String
+  findings : Array[AuditFinding]
+  blocking : Bool
+} derive(Eq, @debug.Debug)
+pub fn ContextAudit::critical_count(Self) -> Int
+pub fn ContextAudit::equal(Self, Self) -> Bool
+pub fn ContextAudit::info_count(Self) -> Int
+pub fn ContextAudit::not_equal(Self, Self) -> Bool
+pub fn ContextAudit::to_repr(Self) -> @debug.Repr
+pub fn ContextAudit::warning_count(Self) -> Int
+
+pub(all) struct Diagnostic {
+  code : String
+  severity : @cidr-audit.Severity
+  blocking : Bool
+  message : String
+  source : SourceLocation?
+  context : String
+} derive(Eq, @debug.Debug)
+pub fn Diagnostic::equal(Self, Self) -> Bool
+pub fn Diagnostic::not_equal(Self, Self) -> Bool
+pub fn Diagnostic::to_repr(Self) -> @debug.Repr
+
+pub(all) struct IncludeEdge {
+  source : SourceLocation
+  pattern : String
+  targets : Array[String]
+} derive(Eq, @debug.Debug)
+pub fn IncludeEdge::equal(Self, Self) -> Bool
+pub fn IncludeEdge::not_equal(Self, Self) -> Bool
+pub fn IncludeEdge::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Limits {
+  max_sources : Int
+  max_total_chars : Int
+  max_source_chars : Int
+  max_include_depth : Int
+  max_include_expansions : Int
+  max_context_depth : Int
+  max_directives : Int
+  max_contexts : Int
+  max_rules : Int
+  max_audit_pairs : Int
+} derive(Eq, @debug.Debug)
+pub fn Limits::default() -> Self
+pub fn Limits::equal(Self, Self) -> Bool
+pub fn Limits::not_equal(Self, Self) -> Bool
+pub fn Limits::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ProbeResult {
+  ip : String
+  outcome : AccessOutcome
+  context : String
+  matched_rule : AccessRule?
+} derive(Eq, @debug.Debug)
+pub fn ProbeResult::equal(Self, Self) -> Bool
+pub fn ProbeResult::not_equal(Self, Self) -> Bool
+pub fn ProbeResult::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SourceFile {
+  path : String
+  content : String
+} derive(Eq, @debug.Debug)
+pub fn SourceFile::equal(Self, Self) -> Bool
+pub fn SourceFile::not_equal(Self, Self) -> Bool
+pub fn SourceFile::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SourceLocation {
+  path : String
+  line : Int
+  include_chain : Array[String]
+} derive(Eq, @debug.Debug)
+pub fn SourceLocation::equal(Self, Self) -> Bool
+pub fn SourceLocation::not_equal(Self, Self) -> Bool
+pub fn SourceLocation::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

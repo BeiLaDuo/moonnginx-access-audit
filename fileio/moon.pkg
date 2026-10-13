@@ -1,0 +1,7 @@
+import {
+  "BeiLaDuo/cidr-audit/nginx",
+  "LuoYunxin1/moonnginx" @ngx,
+  "moonbitlang/core/json",
+}
+
+supported_targets = "js"

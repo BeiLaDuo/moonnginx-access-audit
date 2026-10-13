@@ -1,0 +1,52 @@
+worker_processes 1;
+daemon off;
+master_process off;
+pid logs/nginx.pid;
+error_log logs/error.log notice;
+
+events { worker_connections 32; }
+
+http {
+    access_log off;
+    include policies/http-access.conf;
+
+    server {
+        listen 127.0.0.1:{{PORT}};
+        server_name own.test;
+        root html;
+        include policies/server-access.conf;
+
+        location /inherited/ {
+        }
+        location /override-deny/ {
+            deny 127.0.0.0/8;
+        }
+        location /unmatched/ {
+            allow 192.0.2.0/24;
+        }
+        location /first-allow/ {
+            allow 127.0.0.0/8;
+            deny all;
+        }
+        location /first-deny/ {
+            deny 127.0.0.1;
+            allow 127.0.0.0/8;
+        }
+        location /nested/ {
+            deny all;
+            location /nested/open/ {
+                allow 127.0.0.1;
+            }
+            location /nested/inherited/ {
+            }
+        }
+    }
+
+    server {
+        listen 127.0.0.1:{{PORT}};
+        server_name inherited.test;
+        root html;
+        location /http-inherited/ {
+        }
+    }
+}
