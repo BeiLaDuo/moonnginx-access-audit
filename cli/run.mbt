@@ -17,6 +17,7 @@ pub fn help_text() -> String {
     #|  mooncidr validate CONFIG [OPTIONS]
     #|  mooncidr help
     #|  mooncidr version
+    #|  mooncidr COMMAND --help
     #|
     #|Options:
     #|  --root DIRECTORY     Local input root, default '.'

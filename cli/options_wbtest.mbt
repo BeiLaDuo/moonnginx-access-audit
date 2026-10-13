@@ -104,6 +104,28 @@ test "invalid commands and flags are never silently ignored" {
 }
 
 ///|
+test "subcommand help runs without any configuration sources" {
+  for command in ["contexts", "audit", "probe", "validate"] {
+    for flag in ["--help", "-h"] {
+      let result = run(parse_args([command, flag]).unwrap(), [])
+      assert_eq(result.exit_code, 0)
+      assert_eq(result.stderr, "")
+      assert_true(result.stdout.contains("Usage:"))
+    }
+  }
+}
+
+///|
+test "help does not conceal misspelled commands or consume literal filenames" {
+  assert_eq(parse_failure(["auidt", "--help"]), "unknown_command")
+  assert_eq(parse_failure(["audit", "--help", "extra"]), "unknown_option")
+  assert_eq(parse_failure(["version", "--help"]), "unexpected_argument")
+  let options = parse_args(["validate", "--", "--help"]).unwrap()
+  assert_eq(options.command, Validate)
+  assert_eq(options.entry, "--help")
+}
+
+///|
 test "entry paths stay local and relative to the selected root" {
   for
     entry in [

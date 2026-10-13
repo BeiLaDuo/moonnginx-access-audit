@@ -86,6 +86,10 @@ pub fn parse_args(args : Array[String]) -> Result[Options, CliError] {
     }
     return Ok(defaults)
   }
+  // Asking for command help must not require or open a configuration file.
+  if args.length() == 2 && (args[1] == "--help" || args[1] == "-h") {
+    return Ok(basic_options(Help))
+  }
   let positionals : Array[String] = []
   let seen : Array[String] = []
   let mut input_root = defaults.input_root

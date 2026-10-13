@@ -130,6 +130,10 @@ class Runner:
         })
         require(completed.returncode == expected,
                 f"expected exit {expected}, observed {completed.returncode}")
+        if kind == "help":
+            require(not completed.stderr and "Usage:" in completed.stdout,
+                    "subcommand help must succeed without a configuration")
+            return {}
         if kind == "argument_error":
             require(not completed.stdout, "argument error must not write a success report")
             require(completed.stderr.startswith((error_code or "") + ":"),
@@ -194,6 +198,11 @@ class Runner:
 
 
 def verify(runner: Runner) -> None:
+    def subcommand_help(root: Path) -> None:
+        for command in ["contexts", "audit", "probe", "validate"]:
+            runner.execute([command, "--help"], 0, root=root, kind="help")
+    runner.case("subcommand_help_without_configuration", subcommand_help)
+
     def literal_filename(root: Path) -> None:
         write(root, "-access.conf", "http {server {allow 127.0.0.1; deny all;}}\n")
         report = runner.execute(["contexts", "--root", str(root), "--format", "json", "--", "-access.conf"],
