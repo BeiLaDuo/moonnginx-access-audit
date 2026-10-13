@@ -7,6 +7,22 @@ fn parse_failure(args : Array[String]) -> String {
 }
 
 ///|
+test "end of options preserves dash-prefixed configuration filenames" {
+  assert_eq(
+    parse_args(["validate", "--", "-access.conf"]).unwrap().entry,
+    "-access.conf",
+  )
+  let literal = parse_args(["audit", "--format", "json", "--", "--strict"]).unwrap()
+  assert_eq(literal.entry, "--strict")
+  assert_false(literal.strict)
+  assert_eq(parse_failure(["validate", "--"]), "invalid_arguments")
+  assert_eq(
+    parse_failure(["audit", "--", "a.conf", "--strict"]),
+    "invalid_arguments",
+  )
+}
+
+///|
 test "help and version do not require configuration" {
   assert_eq(parse_args([]).unwrap().command, Help)
   assert_eq(parse_args(["--help"]).unwrap().command, Help)

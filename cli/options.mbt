@@ -86,9 +86,15 @@ pub fn parse_args(args : Array[String]) -> Result[Options, CliError] {
   let mut strict = false
   let mut limits = defaults.limits
   let mut index = 1
+  let mut positional_only = false
   while index < args.length() {
     let argument = args[index]
-    if argument.has_prefix("-") {
+    if !positional_only && argument == "--" {
+      positional_only = true
+      index += 1
+      continue
+    }
+    if !positional_only && argument.has_prefix("-") {
       if seen.contains(argument) {
         return Err(
           argument_error(

@@ -30,6 +30,8 @@ node tools/cidr-audit.mjs help
 
 CLI 优先使用 `_build` 中的 release 构建，其次使用 debug 构建，最后使用交付包的 `dist` 文件。从源码开发时使用上面的 release 构建命令。
 
+配置文件名以 `-` 开头时，在所有选项之后使用 `--`，例如 `contexts --root configs --format json -- -access.conf`。分隔符之后的参数按文件名或 IP 原样处理。
+
 ## 报告与退出码
 
 报告格式支持 `text`、`json`、`markdown`。JSON 使用 `schema_version: 1`，包含范围说明、结构上下文、来源文件/行号、include 链和诊断。失败报告的错误字段位于 `error.code`。

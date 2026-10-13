@@ -24,6 +24,7 @@ pub fn help_text() -> String {
     #|  --context ID         Exact selector from the contexts command
     #|  --strict             Audit also fails on warnings
     #|  --limits NAME=VALUE,...   Override positive integer resource limits
+    #|  --                   End options; later arguments are literal paths/IPs
     #|
     #|Limit names: max_sources, max_total_chars, max_source_chars,
     #|max_include_depth, max_include_expansions, max_directives,

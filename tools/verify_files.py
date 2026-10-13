@@ -174,6 +174,15 @@ class Runner:
 
 
 def verify(runner: Runner) -> None:
+    def literal_filename(root: Path) -> None:
+        write(root, "-access.conf", "http {server {allow 127.0.0.1; deny all;}}\n")
+        report = runner.execute(["contexts", "--root", str(root), "--format", "json", "--", "-access.conf"],
+                                0, root=root)
+        require(report["entry"] == "-access.conf", "a literal dash-prefixed path must be loaded")
+        require(runner.probe(root, server(report)["selector"], "127.0.0.1", entry="./-access.conf")["outcome"]
+                == "allowed_by_rule", "literal filename must retain actual access behavior")
+    runner.case("literal_dash_filename", literal_filename)
+
     def anchored(root: Path) -> None:
         write(root, "config/nginx.conf", "events {}\nhttp { server { include fragments/access.conf; } }\n")
         write(root, "config/fragments/access.conf", "allow 198.51.100.7;\ninclude tail.conf;\n")
