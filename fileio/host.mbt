@@ -12,7 +12,11 @@ extern "js" fn filesystem_request(
   #|   const path = process.getBuiltinModule('path');
   #|   const failure = (code, message) => JSON.stringify({ok:false, code, message});
   #|   try {
-  #|     const base = fs.realpathSync(path.resolve(root));
+  #|     const requestedRoot = path.resolve(root);
+  #|     if (fs.lstatSync(requestedRoot).isSymbolicLink()) {
+  #|       return failure('unsupported_path', 'Input root must not be a symbolic link or junction');
+  #|     }
+  #|     const base = fs.realpathSync(requestedRoot);
   #|     if (!fs.statSync(base).isDirectory()) return failure('io_error', 'Input root is not a directory');
   #|     if (path.isAbsolute(relative)) return failure('path_escape', 'Expected a root-relative path');
   #|     const target = path.resolve(base, relative);

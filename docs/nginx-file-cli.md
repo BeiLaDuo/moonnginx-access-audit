@@ -58,6 +58,8 @@ probe 的 IPv4 参数在读取配置前校验。错误地址始终报告 `invali
 - 正常的 allow-list + `deny all;` 不会被报告为阻止所有地址；非规范 CIDR 和确实不可达的规则仍有诊断。
 - 文件 CLI 严格 UTF-8，接受 UTF-8 BOM；拒绝读取范围外的路径和配置文件/目录的符号链接或 junction。
 
+指定的输入根目录本身也不得为符号链接或 junction，否则返回 `unsupported_path` 和退出码 3；不能通过把链接放在 `--root` 中绕过文件读取限制。
+
 首版不模拟 URL/域名路由选择、rewrite、内部跳转、组合鉴权、real_ip 信任、IPv6、UNIX socket、stream/mail 或完整 Nginx 合法性。关键的未支持语义会产生阻塞诊断。include 不支持 `$`、`[]`、`**`、目录通配符或配置里的反斜杠转义；配置路径请使用 `/`。输入根目录的宿主路径可以使用 Windows 分隔符。
 
 ## 资源预算与验证

@@ -64,6 +64,26 @@ def write(root: Path, name: str, content: str | bytes) -> Path:
     return destination
 
 
+def directory_alias(link: Path, target: Path) -> None:
+    if os.name == "nt":
+        powershell = shutil.which("powershell") or shutil.which("pwsh")
+        if not powershell:
+            raise UnsupportedEnvironment("PowerShell unavailable for a real Windows junction fixture")
+        quoted_link = str(link).replace("'", "''")
+        quoted_target = str(target).replace("'", "''")
+        result = subprocess.run([
+            powershell, "-NoProfile", "-NonInteractive", "-Command",
+            f"New-Item -ItemType Junction -Path '{quoted_link}' -Target '{quoted_target}' -ErrorAction Stop | Out-Null",
+        ], capture_output=True, timeout=20, encoding="utf-8", errors="replace", **hidden_process_options())
+        if result.returncode:
+            raise UnsupportedEnvironment(f"junction creation unavailable: {result.stderr.strip()}")
+    else:
+        try:
+            link.symlink_to(target, target_is_directory=True)
+        except (OSError, NotImplementedError) as error:
+            raise UnsupportedEnvironment(f"directory symlinks unavailable: {error}") from error
+
+
 def server(payload: dict[str, Any]) -> dict[str, Any]:
     matches = [item for item in payload["contexts"] if item["kind"] == "server"]
     require(len(matches) == 1, "fixture must expose exactly one server context")
@@ -395,25 +415,17 @@ def verify(runner: Runner) -> None:
         write(root, "target/access.conf", "deny all;\n")
         write(root, "nginx.conf", "http {server {include linked/access.conf;}}\n")
         link = root / "linked"
-        if os.name == "nt":
-            powershell = shutil.which("powershell") or shutil.which("pwsh")
-            if not powershell:
-                raise UnsupportedEnvironment("PowerShell unavailable for a real Windows junction fixture")
-            quoted_link = str(link).replace("'", "''")
-            quoted_target = str(target).replace("'", "''")
-            result = subprocess.run([
-                powershell, "-NoProfile", "-NonInteractive", "-Command",
-                f"New-Item -ItemType Junction -Path '{quoted_link}' -Target '{quoted_target}' -ErrorAction Stop | Out-Null",
-            ], capture_output=True, timeout=20, encoding="utf-8", errors="replace", **hidden_process_options())
-            if result.returncode:
-                raise UnsupportedEnvironment(f"junction creation unavailable: {result.stderr.strip()}")
-        else:
-            try:
-                link.symlink_to(target, target_is_directory=True)
-            except (OSError, NotImplementedError) as error:
-                raise UnsupportedEnvironment(f"directory symlinks unavailable: {error}") from error
+        directory_alias(link, target)
         runner.query(root, command="validate", expected=3, error_code="unsupported_path")
     runner.case("junction_or_directory_symlink_rejected", directory_link)
+
+    def linked_root(root: Path) -> None:
+        target = root / "target"
+        write(root, "target/nginx.conf", "http {server {allow 127.0.0.1; deny all;}}\n")
+        link = root / "linked"
+        directory_alias(link, target)
+        runner.query(link, command="validate", expected=3, error_code="unsupported_path")
+    runner.case("linked_input_root_rejected", linked_root)
 
 
 def main() -> int:
