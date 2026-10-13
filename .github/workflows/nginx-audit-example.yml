@@ -1,0 +1,41 @@
+name: Nginx audit example
+
+on:
+  workflow_dispatch:
+    inputs:
+      policy:
+        description: Example policy to audit
+        type: choice
+        options: [safe, warning, risky, unsupported]
+        default: safe
+      strict:
+        description: Also fail on warnings
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Audit the selected configuration
+        env:
+          POLICY: ${{ inputs.policy }}
+          STRICT: ${{ inputs.strict }}
+        run: |
+          args=()
+          if [ "$STRICT" = "true" ]; then args+=(--strict); fi
+          node tools/cidr-audit.mjs audit "$POLICY.conf" --root examples/ci --format json "${args[@]}" >audit.json 2>diagnostics.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nginx-audit-report
+          path: |
+            audit.json
+            diagnostics.json
