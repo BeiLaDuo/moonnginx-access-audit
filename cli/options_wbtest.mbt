@@ -23,6 +23,22 @@ test "end of options preserves dash-prefixed configuration filenames" {
 }
 
 ///|
+test "invalid probe addresses are rejected before loading configuration" {
+  for ip in ["999.0.0.1", "::1", "127.0.0.1/32", "not-an-address"] {
+    assert_eq(
+      parse_failure(["probe", "missing.conf", ip, "--context", "http[1]"]),
+      "invalid_probe",
+    )
+  }
+  assert_eq(
+    parse_args([
+      "probe", "missing.conf", "255.255.255.255", "--context", "http[1]",
+    ]).unwrap().ip,
+    Some("255.255.255.255"),
+  )
+}
+
+///|
 test "help and version do not require configuration" {
   assert_eq(parse_args([]).unwrap().command, Help)
   assert_eq(parse_args(["--help"]).unwrap().command, Help)

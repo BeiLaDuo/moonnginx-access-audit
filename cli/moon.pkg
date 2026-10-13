@@ -1,4 +1,5 @@
 import {
+  "BeiLaDuo/cidr-audit" @cidr,
   "BeiLaDuo/cidr-audit/nginx",
   "moonbitlang/core/debug",
 }

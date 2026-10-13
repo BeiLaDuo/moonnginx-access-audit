@@ -130,6 +130,12 @@ pub fn run(options : Options, sources : Array[@nginx.SourceFile]) -> CliResult {
       options.format,
     )
   }
+  if options.command == Probe {
+    match validate_probe_ip(options.ip.unwrap()) {
+      Err(error) => return cli_failure(error, options.format)
+      Ok(_) => ()
+    }
+  }
   let analysis = match
     @nginx.analyze_nginx_sources(options.entry, sources, limits=options.limits) {
     Ok(value) => value

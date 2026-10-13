@@ -147,10 +147,13 @@ test "unknown context and invalid probe address are input failures" {
   let analysis = @nginx.analyze_nginx_sources("nginx.conf", sources).unwrap()
   let selector = analysis.contexts[0].selector
   let invalid = run(
-    parse_args([
-      "probe", "nginx.conf", "999.0.0.1", "--context", selector, "--format", "json",
-    ]).unwrap(),
-    sources,
+    {
+      ..parse_args([
+        "probe", "nginx.conf", "127.0.0.1", "--context", selector, "--format", "json",
+      ]).unwrap(),
+      ip: Some("999.0.0.1"),
+    },
+    [],
   )
   assert_eq(invalid.exit_code, 2)
   assert_eq(json_error_code(invalid), "invalid_probe")

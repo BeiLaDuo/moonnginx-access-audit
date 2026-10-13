@@ -374,6 +374,12 @@ def verify(runner: Runner) -> None:
                        2, root=root, kind="argument_error", error_code="unknown_option")
     runner.case("unknown_cli_option", unknown_option)
 
+    def invalid_probe(root: Path) -> None:
+        runner.execute(["probe", "does-not-exist.conf", "999.0.0.1", "--root", str(root),
+                        "--context", "http[1]", "--format", "json"],
+                       2, root=root, kind="error", error_code="invalid_probe")
+    runner.case("invalid_probe_before_file_io", invalid_probe)
+
     def symlink(root: Path) -> None:
         target = write(root, "target.conf", "deny all;\n")
         write(root, "nginx.conf", "http {server {include linked.conf;}}\n")

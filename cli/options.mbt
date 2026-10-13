@@ -38,6 +38,14 @@ fn argument_error(code : String, message : String) -> CliError {
 }
 
 ///|
+fn validate_probe_ip(ip : String) -> Result[Unit, CliError] {
+  match @cidr.IPv4::parse(ip) {
+    Ok(_) => Ok(())
+    Err(message) => Err(argument_error("invalid_probe", message))
+  }
+}
+
+///|
 fn basic_options(command : Command) -> Options {
   {
     command,
@@ -206,6 +214,12 @@ pub fn parse_args(args : Array[String]) -> Result[Options, CliError] {
         "missing_context", "probe requires --context ID; use contexts to discover IDs",
       ),
     )
+  }
+  if command == Probe {
+    match validate_probe_ip(positionals[1]) {
+      Err(error) => return Err(error)
+      Ok(_) => ()
+    }
   }
   Ok({
     command,
