@@ -2,7 +2,7 @@
 
 ## October 2026 development: real Nginx configuration audit
 
-The local 0.2.0 delivery adds a MoonBit HTTP IPv4 access-rule adapter and a
+The 0.2.0 development update adds a MoonBit HTTP IPv4 access-rule adapter and a
 real-file CLI. It understands configuration contexts, inherited rule lists,
 offline includes, source locations, explicit resource budgets and three-way
 address outcomes. It reuses `LuoYunxin1/moonnginx@0.2.0` as its parser.
@@ -21,9 +21,16 @@ effects. A file CLI probe does not claim complete Nginx authorization, and
 unsupported access-relevant semantics block successful analysis.
 
 See [scope and baseline](docs/october-scope.md), [third-party notices](THIRD_PARTY.md),
-and [validation](docs/local-validation.md). Version 0.2.0 is a local delivery;
-the previously published Mooncakes version is 0.1.2. No registration, remote
-push, release or Mooncakes publication was performed for this delivery.
+and [validation](docs/local-validation.md). The previously published Mooncakes
+version is 0.1.2. Competition registration, remote releases and Mooncakes
+publication remain separate user actions.
+
+The update also supports literal dash-prefixed filenames, structured argument
+errors, early IPv4 validation and rejection of linked input roots. CI compares
+the shipped CLI with fresh builds on real file workflows. Try the runnable
+[CI audit example](docs/ci-audit-example.md), which demonstrates safe, warning,
+risky and unsupported configurations, or review the
+[development record](docs/development-record.md) for this round's changes.
 
 MoonCIDR Audit is a pure MoonBit library for auditing ordered IPv4/CIDR allow
 and deny rules. It helps gateway, reverse proxy, cloud security group, and

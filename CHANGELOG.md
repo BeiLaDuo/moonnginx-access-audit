@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 — local October 2026 delivery
+## 0.2.0 — October 2026 development
 
 - Reuse moonnginx 0.2.0 for bounded parsing of actual configuration sources.
 - Add HTTP structural contexts, first-match IPv4 access evaluation and correct
@@ -14,7 +14,13 @@
   tests. Windows native compilation is not marked as tested.
 - Preserve the 0.1.2 APIs, adapt public trait exports to MoonBit 0.10.15, and
   update CI, consumer examples, licenses and current submission materials.
-- Keep the release local: no registration, remote push or Mooncakes publication.
+- Support literal filenames after `--`, format-aware argument errors and
+  validation of probe addresses before any filesystem access.
+- Reject symbolic links and junctions used as the input root itself.
+- Compare fresh builds with the shipped CLI over actual file workflows in CI.
+- Provide safe, warning, risky and unsupported policies and a manual audit
+  workflow with persisted JSON reports.
+- Keep competition registration and Mooncakes publication as separate actions.
 
 ## 0.1.2
 
