@@ -10,6 +10,7 @@ address outcomes. It reuses `LuoYunxin1/moonnginx@0.2.0` as its parser.
 Read the [Chinese file CLI guide](docs/nginx-file-cli.md) or run:
 
 ```powershell
+moon update
 moon build cmd/nginx-cli --target js --release --deny-warn
 node tools/cidr-audit.mjs contexts nginx.conf --root examples/nginx/files --format json
 moon run examples/nginx --target wasm-gc
@@ -82,6 +83,7 @@ configuration import.
 Run checks:
 
 ```powershell
+moon update
 moon check
 moon build --target all
 moon test --target all --deny-warn

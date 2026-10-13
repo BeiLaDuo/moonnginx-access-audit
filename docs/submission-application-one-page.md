@@ -20,7 +20,7 @@ MoonCIDR Audit 面向网关、反向代理维护者和 CI 工具开发者，提�
 - 提供 contexts/audit/probe/validate 文件命令、三态地址结果、JSON/Markdown 报告与 CI 退出码；
 - 有效 MoonBit 实现 5,468 行，排除测试、示例、依赖、嵌入 JavaScript 和兼容声明；
 - 160 项测试在 JS/Wasm/Wasm GC 全通过；真实 Nginx 12 个 HTTP 场景对照通过；文件工作流 28 项通过、1 项因权限跳过；交付脚本与新构建行为一致；
-- 提供 README、消费示例、可执行 CI 门禁演示和本轮 15 次实质 Git 提交记录。首版不覆盖完整路由、IPv6及组合鉴权；关键未支持语义明确阻塞。Windows native 构建未验证。
+- 提供 README、消费示例、可执行 CI 门禁演示和本轮 16 次实质 Git 提交记录。首版不覆盖完整路由、IPv6及组合鉴权；关键未支持语义明确阻塞。Windows native 构建未验证。
 
 ## 移植或参考说明
 
