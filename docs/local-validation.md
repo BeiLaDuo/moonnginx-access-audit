@@ -26,6 +26,20 @@ Windows 没有 MSVC/Windows SDK，因此只完成 native 类型检查，没有�
 
 ## 可复核证据
 
+### 远端 Ubuntu CI
+
+提交 `4ae4210` 的 [GitHub CI 运行](https://github.com/BeiLaDuo/mooncidr-audit/actions/runs/38394157012)已成功完成。它从空环境更新 Mooncakes 索引并构建，不依赖本地依赖缓存。
+
+| 远端检查 | 实际结果 |
+|---|---|
+| JS / Wasm / Wasm GC / native | 每目标 160 / 160 测试通过，构建和严格检查通过 |
+| 实际文件工作流 | 29 通过，0 失败，0 跳过 |
+| 交付 CLI 与新构建 | 29 个场景逐项行为一致 |
+| CI 策略示例 | 5 / 5 符合预期 |
+| 真实 Nginx 对照、代码规模和打包 | 全部通过 |
+
+Ubuntu native 验证与本地 Windows native 未验证分别记录，不混为同一个平台结果。
+
 本地原始 JSON 随交付材料提供：`verification-summary.json`、`code-count.json`、`file-workflow.json`、`nginx-comparison.json`、`distribution.json`、`ci-examples.json`。三个目标的 160 项测试计数来自实际命令输出；Nginx 和文件工作流报告记录逐案输入、结果和进程清理。
 
 `tools/measure_code.py` 排除空行、注释、测试、示例、依赖、生成接口、嵌入 JavaScript 与多行数据，并把兼容声明另列。与旧基线的统计差值包含必要的工具链格式适配，不冒充全部新写的算法代码。实现增加来自配置上下文、include、审计、报告、CLI 与文件工作流。

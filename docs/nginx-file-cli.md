@@ -84,4 +84,6 @@ python tools/verify_files.py --output _build/ci/file-workflow.json
 python tools/verify_nginx.py --nginx C:/tools/nginx/nginx.exe --cli-command-json '["node","tools/cidr-audit.mjs"]' --output _build/ci/nginx-comparison.json
 ```
 
-本机交付验证使用 MoonBit 0.10.15、Node.js 24.19.0 和官方 Nginx Windows 1.30.5。文件 CLI 的已验证运行方式为 Node.js；纯库支持并测试 JavaScript、Wasm、Wasm GC。Windows 缺少 MSVC/Windows SDK，未执行 native 二进制构建与测试，不能将其标为通过。CI 在 Ubuntu 上额外安排 native 构建/测试，但远端 CI 尚未触发。
+本机交付验证使用 MoonBit 0.10.15、Node.js 24.19.0 和官方 Nginx Windows 1.30.5。文件 CLI 的已验证运行方式为 Node.js；纯库在本地测试 JavaScript、Wasm、Wasm GC。Windows 缺少 MSVC/Windows SDK，未执行 Windows native 二进制构建与测试。
+
+Ubuntu CI 已通过四目标构建和测试，每个目标 160 项测试全部通过，包括 native；真实文件场景 29 项全部通过、无跳过。交付 CLI 行为对照、CI 示例及真实 Nginx 对照也通过。[查看已通过的远端验证记录](https://github.com/BeiLaDuo/mooncidr-audit/actions/runs/38394157012)。
