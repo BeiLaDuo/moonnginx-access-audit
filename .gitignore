@@ -1,0 +1,9 @@
+_build/
+target/
+.moon/
+.mooncakes/
+__pycache__/
+*.pyc
+*.tmp
+*.log
+docs/*-preview.png
