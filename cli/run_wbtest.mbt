@@ -4,6 +4,29 @@ fn fixture_source(content : String) -> Array[@nginx.SourceFile] {
 }
 
 ///|
+test "argument errors honor explicit report formats and ignore literal option-like paths" {
+  let args = ["validate", "missing.conf", "--format", "json", "--unknown\"\n"]
+  let error = match parse_args(args) {
+    Err(error) => error
+    Ok(_) => abort("unknown option must fail")
+  }
+  let result = argument_failure(error, args)
+  assert_eq(result.exit_code, 2)
+  assert_eq(result.stdout, "")
+  assert_eq(json_error_code(result), "unknown_option")
+  assert_true(
+    argument_failure(error, ["validate", "--format", "markdown"]).stderr.has_prefix(
+      "# Analysis failed",
+    ),
+  )
+  assert_true(
+    argument_failure(error, ["validate", "--", "--format", "json"]).stderr.has_prefix(
+      "unknown_option:",
+    ),
+  )
+}
+
+///|
 fn server_selector(sources : Array[@nginx.SourceFile]) -> String {
   let analysis = @nginx.analyze_nginx_sources("nginx.conf", sources).unwrap()
   for context in analysis.contexts {

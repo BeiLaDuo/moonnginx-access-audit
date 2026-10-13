@@ -369,6 +369,8 @@ def verify(runner: Runner) -> None:
 
     def unknown_option(root: Path) -> None:
         runner.execute(["validate", "does-not-exist.conf", "--root", str(root), "--format", "json", "--unknown"],
+                       2, root=root, kind="error", error_code="unknown_option")
+        runner.execute(["validate", "does-not-exist.conf", "--unknown"],
                        2, root=root, kind="argument_error", error_code="unknown_option")
     runner.case("unknown_cli_option", unknown_option)
 

@@ -7,6 +7,8 @@ import {
 }
 
 // Values
+pub fn argument_failure(CliError, Array[String]) -> CliResult
+
 pub fn help_text() -> String
 
 pub fn parse_args(Array[String]) -> Result[Options, CliError]

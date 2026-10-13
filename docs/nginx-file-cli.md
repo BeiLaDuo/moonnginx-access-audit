@@ -36,6 +36,8 @@ CLI 优先使用 `_build` 中的 release 构建，其次使用 debug 构建，�
 
 报告格式支持 `text`、`json`、`markdown`。JSON 使用 `schema_version: 1`，包含范围说明、结构上下文、来源文件/行号、include 链和诊断。失败报告的错误字段位于 `error.code`。
 
+参数错误也遵循明确指定的 `--format`，写入 stderr，stdout 保持为空；未指定或无法辨认的格式回退到 text。`--` 后的字面文件名不会被误当作格式选项。
+
 | 退出码 | 含义 |
 |---:|---|
 | 0 | 在声明范围内完成；probe 拒绝某地址也属于成功查询 |

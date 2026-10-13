@@ -31,7 +31,8 @@ fn main {
   let options = match @cli.parse_args(argument_list) {
     Ok(value) => value
     Err(error) => {
-      finish(2, "", error.summary())
+      let result = @cli.argument_failure(error, argument_list)
+      finish(result.exit_code, result.stdout, result.stderr)
       return
     }
   }

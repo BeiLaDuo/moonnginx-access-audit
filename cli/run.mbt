@@ -59,8 +59,43 @@ fn config_failure(error : @nginx.ConfigError, format : String) -> CliResult {
 }
 
 ///|
-fn cli_failure(error : CliError) -> CliResult {
-  { exit_code: 2, stdout: "", stderr: error.summary() + "\n", }
+fn cli_failure(error : CliError, format : String) -> CliResult {
+  let detail : @nginx.ConfigError = {
+    code: error.code,
+    message: error.message,
+    path: "",
+    line: 0,
+  }
+  { exit_code: 2, stdout: "", stderr: @nginx.render_error(detail, format), }
+}
+
+///|
+/// Keep argument failures machine-readable without interpreting literal filenames.
+pub fn argument_failure(error : CliError, args : Array[String]) -> CliResult {
+  let mut index = 1
+  while index < args.length() {
+    let option = args[index]
+    if option == "--" {
+      break
+    }
+    if option == "--format" && index + 1 < args.length() {
+      let format = args[index + 1]
+      return cli_failure(
+        error,
+        if ["json", "markdown", "text"].contains(format) {
+          format
+        } else {
+          "text"
+        },
+      )
+    }
+    index += if ["--root", "--context", "--limits"].contains(option) {
+      2
+    } else {
+      1
+    }
+  }
+  cli_failure(error, "text")
 }
 
 ///|
@@ -75,7 +110,7 @@ pub fn run(options : Options, sources : Array[@nginx.SourceFile]) -> CliResult {
   }
   // Public Options may also be constructed directly by library callers.
   match validate_entry(options.entry) {
-    Err(error) => return cli_failure(error)
+    Err(error) => return cli_failure(error, options.format)
     Ok(_) => ()
   }
   if options.format != "text" &&
@@ -83,6 +118,7 @@ pub fn run(options : Options, sources : Array[@nginx.SourceFile]) -> CliResult {
     options.format != "markdown" {
     return cli_failure(
       argument_error("invalid_format", "format must be text, json, or markdown"),
+      "text",
     )
   }
   if options.command == Probe &&
@@ -91,6 +127,7 @@ pub fn run(options : Options, sources : Array[@nginx.SourceFile]) -> CliResult {
       argument_error(
         "invalid_arguments", "probe requires IP and context selector",
       ),
+      options.format,
     )
   }
   let analysis = match
