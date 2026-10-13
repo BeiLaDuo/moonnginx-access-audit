@@ -53,6 +53,9 @@ jobs:
       - name: Verify actual file workflows
         run: python tools/verify_files.py --output _build/ci/file-workflow.json
 
+      - name: Verify the shipped CLI matches the fresh build
+        run: python tools/verify_distribution.py --output _build/ci/distribution.json
+
       - name: Install Nginx test dependency
         run: |
           sudo apt-get update

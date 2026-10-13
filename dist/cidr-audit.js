@@ -46,6 +46,14 @@ function _M0TP38BeiLaDuo12cidr_2daudit5nginx6Limits(param0, param1, param2, para
   this.max_rules = param8;
   this.max_audit_pairs = param9;
 }
+function _M0DTPC16result6ResultGRP28BeiLaDuo12cidr_2daudit4IPv4sE3Err(param0) {
+  this._0 = param0;
+}
+_M0DTPC16result6ResultGRP28BeiLaDuo12cidr_2daudit4IPv4sE3Err.prototype.$tag = 0;
+function _M0DTPC16result6ResultGRP28BeiLaDuo12cidr_2daudit4IPv4sE2Ok(param0) {
+  this._0 = param0;
+}
+_M0DTPC16result6ResultGRP28BeiLaDuo12cidr_2daudit4IPv4sE2Ok.prototype.$tag = 1;
 function _M0DTPC16result6ResultGRP28BeiLaDuo12cidr_2daudit9CidrBlocksE3Err(param0) {
   this._0 = param0;
 }
@@ -62,14 +70,6 @@ function _M0DTPC16result6ResultGisE2Ok(param0) {
   this._0 = param0;
 }
 _M0DTPC16result6ResultGisE2Ok.prototype.$tag = 1;
-function _M0DTPC16result6ResultGRP28BeiLaDuo12cidr_2daudit4IPv4sE3Err(param0) {
-  this._0 = param0;
-}
-_M0DTPC16result6ResultGRP28BeiLaDuo12cidr_2daudit4IPv4sE3Err.prototype.$tag = 0;
-function _M0DTPC16result6ResultGRP28BeiLaDuo12cidr_2daudit4IPv4sE2Ok(param0) {
-  this._0 = param0;
-}
-_M0DTPC16result6ResultGRP28BeiLaDuo12cidr_2daudit4IPv4sE2Ok.prototype.$tag = 1;
 function _M0DTP210LuoYunxin19moonnginx8NgxError6Syntax(param0) {
   this._0 = param0;
 }
@@ -819,7 +819,11 @@ const _M0FP38BeiLaDuo12cidr_2daudit6fileio19filesystem__request = (root, operati
    const path = process.getBuiltinModule('path');
    const failure = (code, message) => JSON.stringify({ok:false, code, message});
    try {
-     const base = fs.realpathSync(path.resolve(root));
+     const requestedRoot = path.resolve(root);
+     if (fs.lstatSync(requestedRoot).isSymbolicLink()) {
+       return failure('unsupported_path', 'Input root must not be a symbolic link or junction');
+     }
+     const base = fs.realpathSync(requestedRoot);
      if (!fs.statSync(base).isDirectory()) return failure('io_error', 'Input root is not a directory');
      if (path.isAbsolute(relative)) return failure('path_escape', 'Expected a root-relative path');
      const target = path.resolve(base, relative);
@@ -1004,21 +1008,21 @@ const _M0FPC14json12pow10__table = [1, 10, 100, 1000, 10000, 100000, 1000000, 10
 const _M0FPC14json12checked__mulN6constrS1676 = 0n;
 const _M0MP38BeiLaDuo12cidr_2daudit5nginx6Limits7defaultN6recordS2671 = new _M0TP38BeiLaDuo12cidr_2daudit5nginx6Limits(64, 1048576, 262144, 16, 256, 32, 20000, 2048, 4096, 1000000);
 const _M0FPB4seed = _M0FPB12random__seed();
-const _M0FP48BeiLaDuo12cidr_2daudit3cmd11nginx_2dcli13file__failureN7_2abindS3222 = "unsupported";
+const _M0FP48BeiLaDuo12cidr_2daudit3cmd11nginx_2dcli13file__failureN7_2abindS3240 = "unsupported";
+const _M0MP28BeiLaDuo12cidr_2daudit4IPv45parseN6constrS2044 = new _M0DTPC16result6ResultGRP28BeiLaDuo12cidr_2daudit4IPv4sE3Err("empty IPv4 address");
 const _M0MPC16string10StringView4findN6constrS348 = 0;
-const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2923 = "\u0000";
-const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2924 = ":";
-const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2925 = "/";
-const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2926 = "\\";
-const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2927 = "\\";
-const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2928 = "/";
-const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2929 = "/";
-const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2930 = "..";
-const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2931 = "";
+const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2930 = "\u0000";
+const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2931 = ":";
+const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2932 = "/";
+const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2933 = "\\";
+const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2934 = "\\";
+const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2935 = "/";
+const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2936 = "/";
+const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2937 = "..";
+const _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2938 = "";
 const _M0MP28BeiLaDuo12cidr_2daudit9CidrBlock3newN6constrS2041 = new _M0DTPC16result6ResultGRP28BeiLaDuo12cidr_2daudit9CidrBlocksE3Err("CIDR prefix must be between 0 and 32");
 const _M0FP28BeiLaDuo12cidr_2daudit13parse__prefixN6constrS2028 = new _M0DTPC16result6ResultGisE3Err("CIDR prefix must be between 0 and 32");
 const _M0FP28BeiLaDuo12cidr_2daudit13parse__prefixN6constrS2029 = new _M0DTPC16result6ResultGisE3Err("empty CIDR prefix");
-const _M0MP28BeiLaDuo12cidr_2daudit4IPv45parseN6constrS2044 = new _M0DTPC16result6ResultGRP28BeiLaDuo12cidr_2daudit4IPv4sE3Err("empty IPv4 address");
 const _M0MP28BeiLaDuo12cidr_2daudit9CidrBlock5parseN6constrS2057 = new _M0DTPC16result6ResultGRP28BeiLaDuo12cidr_2daudit9CidrBlocksE3Err("empty CIDR block");
 const _M0FP38BeiLaDuo12cidr_2daudit3cli15config__failureN7_2abindS2915 = "unsupported";
 const _M0FP38BeiLaDuo12cidr_2daudit5nginx23normalize__source__pathN7_2abindS2277 = "//";
@@ -1050,21 +1054,21 @@ const _M0FP38BeiLaDuo12cidr_2daudit5nginx12expand__fileN7_2abindS2433 = " -> ";
 const _M0FP38BeiLaDuo12cidr_2daudit5nginx13make__contextN7_2abindS2723 = ":";
 const _M0FP38BeiLaDuo12cidr_2daudit5nginx13make__contextN7_2abindS2724 = "$";
 const _M0FP38BeiLaDuo12cidr_2daudit5nginx13make__contextN7_2abindS2725 = " ";
-const _M0FP38BeiLaDuo12cidr_2daudit3cli13parse__limitsN7_2abindS3006 = ",";
-const _M0FP38BeiLaDuo12cidr_2daudit3cli13parse__limitsN7_2abindS3007 = "=";
-const _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3024 = "-";
-const _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3025 = "--";
-const _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3026 = "\u0000";
-const _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3027 = "://";
-const _M0FP38BeiLaDuo12cidr_2daudit6fileio17parent__directoryN7_2abindS3055 = "/";
-const _M0FP38BeiLaDuo12cidr_2daudit6fileio17parent__directoryN7_2abindS3056 = "/";
+const _M0FP38BeiLaDuo12cidr_2daudit3cli13parse__limitsN7_2abindS3020 = ",";
+const _M0FP38BeiLaDuo12cidr_2daudit3cli13parse__limitsN7_2abindS3021 = "=";
+const _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3038 = "-";
+const _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3039 = "--";
+const _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3040 = "\u0000";
+const _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3041 = "://";
+const _M0FP38BeiLaDuo12cidr_2daudit6fileio17parent__directoryN7_2abindS3073 = "/";
+const _M0FP38BeiLaDuo12cidr_2daudit6fileio17parent__directoryN7_2abindS3074 = "/";
 const _M0FPC28internal7strconv17parse__scientificN8exp__numS1310 = 0n;
 const _M0FPC28internal7strconv17check__underscoreN25_2atransition__table__222S1413 = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 0, 1, 2, 5];
 const _M0FPC28internal7strconv15parse__inf__nanN25_2atransition__table__304S1389 = [14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 3, 4, 14, 14, 14, 14, 14, 14, 14, 7, 14, 14, 14, 14, 5, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 6, 14, 14, 14, 0, 14, 14, 14, 14, 14, 14, 14, 14, 14, 8, 14, 14, 14, 14, 14, 1, 14, 14, 9, 14, 14, 14, 14, 14, 14, 14, 14, 10, 14, 14, 14, 14, 14, 14, 11, 14, 14, 14, 14, 14, 14, 14, 14, 14, 12, 14, 14, 14, 14, 14, 14, 14, 14, 13, 14, 1, 14, 14, 14, 14, 14, 14, 14];
-const _M0FP38BeiLaDuo12cidr_2daudit6fileio16include__targetsN7_2abindS3114 = "*";
-const _M0FP38BeiLaDuo12cidr_2daudit6fileio16include__targetsN7_2abindS3115 = "?";
-const _M0FP38BeiLaDuo12cidr_2daudit6fileio13load__sourcesN7_2abindS3204 = "/";
-const _M0FP38BeiLaDuo12cidr_2daudit6fileio13load__sourcesN7_2abindS3205 = ":";
+const _M0FP38BeiLaDuo12cidr_2daudit6fileio16include__targetsN7_2abindS3132 = "*";
+const _M0FP38BeiLaDuo12cidr_2daudit6fileio16include__targetsN7_2abindS3133 = "?";
+const _M0FP38BeiLaDuo12cidr_2daudit6fileio13load__sourcesN7_2abindS3222 = "/";
+const _M0FP38BeiLaDuo12cidr_2daudit6fileio13load__sourcesN7_2abindS3223 = ":";
 function _M0FPB13consume4__acc(acc, input) {
   const _p = (acc >>> 0) + ((Math.imul(input, -1028477379) | 0) >>> 0) | 0;
   const _p$2 = 17;
@@ -10078,45 +10082,45 @@ function _M0MP38BeiLaDuo12cidr_2daudit5nginx8Analysis6audits(self) {
   }
   return new _M0DTPC16result6ResultGRPB5ArrayGRP38BeiLaDuo12cidr_2daudit5nginx12ContextAuditERP38BeiLaDuo12cidr_2daudit5nginx11ConfigErrorE2Ok(reports);
 }
-function _M0IP38BeiLaDuo12cidr_2daudit3cli7CommandPB2Eq5equal(_x_80, _x_81) {
-  switch (_x_80) {
+function _M0IP38BeiLaDuo12cidr_2daudit3cli7CommandPB2Eq5equal(_x_92, _x_93) {
+  switch (_x_92) {
     case 0: {
-      if (_x_81 === 0) {
+      if (_x_93 === 0) {
         return true;
       } else {
         return false;
       }
     }
     case 1: {
-      if (_x_81 === 1) {
+      if (_x_93 === 1) {
         return true;
       } else {
         return false;
       }
     }
     case 2: {
-      if (_x_81 === 2) {
+      if (_x_93 === 2) {
         return true;
       } else {
         return false;
       }
     }
     case 3: {
-      if (_x_81 === 3) {
+      if (_x_93 === 3) {
         return true;
       } else {
         return false;
       }
     }
     case 4: {
-      if (_x_81 === 4) {
+      if (_x_93 === 4) {
         return true;
       } else {
         return false;
       }
     }
     default: {
-      if (_x_81 === 5) {
+      if (_x_93 === 5) {
         return true;
       } else {
         return false;
@@ -10131,18 +10135,39 @@ function _M0FP38BeiLaDuo12cidr_2daudit3cli15config__failure(error, format) {
   const exit_code = error.code === "limit_exceeded" ? 4 : _M0MPC16string6String11has__prefix(error.code, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15config__failureN7_2abindS2915, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15config__failureN7_2abindS2915.length)) ? 3 : 2;
   return new _M0TP38BeiLaDuo12cidr_2daudit3cli9CliResult(exit_code, "", _M0FP38BeiLaDuo12cidr_2daudit5nginx13render__error(error, format));
 }
-function _M0FP38BeiLaDuo12cidr_2daudit3cli12cli__failure(error) {
-  return new _M0TP38BeiLaDuo12cidr_2daudit3cli9CliResult(2, "", `${error.code}: ${error.message}\n`);
+function _M0FP38BeiLaDuo12cidr_2daudit3cli12cli__failure(error, format) {
+  const detail = new _M0TP38BeiLaDuo12cidr_2daudit5nginx11ConfigError(error.code, error.message, "", 0);
+  return new _M0TP38BeiLaDuo12cidr_2daudit3cli9CliResult(2, "", _M0FP38BeiLaDuo12cidr_2daudit5nginx13render__error(detail, format));
+}
+function _M0FP38BeiLaDuo12cidr_2daudit3cli17argument__failure(error, args) {
+  let index = 1;
+  while (true) {
+    if (index < args.length) {
+      const option = _M0MPC15array5Array2atGsE(args, index);
+      if (option === "--") {
+        break;
+      }
+      if (option === "--format" && (index + 1 | 0) < args.length) {
+        const format = _M0MPC15array5Array2atGsE(args, index + 1 | 0);
+        return _M0FP38BeiLaDuo12cidr_2daudit3cli12cli__failure(error, _M0MPC15array5Array8containsGsE(["json", "markdown", "text"], format) ? format : "text");
+      }
+      index = index + (_M0MPC15array5Array8containsGsE(["--root", "--context", "--limits"], option) ? 2 : 1) | 0;
+      continue;
+    } else {
+      break;
+    }
+  }
+  return _M0FP38BeiLaDuo12cidr_2daudit3cli12cli__failure(error, "text");
 }
 function _M0FP38BeiLaDuo12cidr_2daudit3cli15argument__error(code, message) {
   return new _M0TP38BeiLaDuo12cidr_2daudit3cli8CliError(code, message);
 }
 function _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entry(entry) {
-  if (entry === "" || (_M0MPC16string6String8contains(entry, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2923, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2923.length)) || (_M0MPC16string6String8contains(entry, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2924, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2924.length)) || (_M0MPC16string6String11has__prefix(entry, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2925, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2925.length)) || _M0MPC16string6String11has__prefix(entry, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2926, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2926.length)))))) {
+  if (entry === "" || (_M0MPC16string6String8contains(entry, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2930, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2930.length)) || (_M0MPC16string6String8contains(entry, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2931, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2931.length)) || (_M0MPC16string6String11has__prefix(entry, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2932, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2932.length)) || _M0MPC16string6String11has__prefix(entry, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2933, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2933.length)))))) {
     return new _M0DTPC16result6ResultGuRP38BeiLaDuo12cidr_2daudit3cli8CliErrorE3Err(_M0FP38BeiLaDuo12cidr_2daudit3cli15argument__error("invalid_entry", "CONFIG must be a relative local path inside --root"));
   }
-  const normalized = _M0MPC16string6String12replace__all(entry, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2927, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2927.length), new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2928, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2928.length));
-  const _it = _M0MPC16string6String5split(normalized, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2929, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2929.length));
+  const normalized = _M0MPC16string6String12replace__all(entry, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2934, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2934.length), new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2935, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2935.length));
+  const _it = _M0MPC16string6String5split(normalized, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2936, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2936.length));
   while (true) {
     const _bind = _M0MPB4Iter4nextGRPC16string10StringViewE(_it);
     if (_bind === undefined) {
@@ -10150,7 +10175,7 @@ function _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entry(entry) {
     } else {
       const _Some = _bind;
       const _component = _Some;
-      if (_M0IPC16string10StringViewPB2Eq5equal(_component, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2930, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2930.length)) || _M0IPC16string10StringViewPB2Eq5equal(_component, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2931, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2931.length))) {
+      if (_M0IPC16string10StringViewPB2Eq5equal(_component, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2937, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2937.length)) || _M0IPC16string10StringViewPB2Eq5equal(_component, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2938, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entryN7_2abindS2938.length))) {
         return new _M0DTPC16result6ResultGuRP38BeiLaDuo12cidr_2daudit3cli8CliErrorE3Err(_M0FP38BeiLaDuo12cidr_2daudit3cli15argument__error("invalid_entry", "CONFIG must not contain traversal or empty path components"));
       }
       continue;
@@ -10158,9 +10183,19 @@ function _M0FP38BeiLaDuo12cidr_2daudit3cli15validate__entry(entry) {
   }
   return new _M0DTPC16result6ResultGuRP38BeiLaDuo12cidr_2daudit3cli8CliErrorE2Ok(undefined);
 }
+function _M0FP38BeiLaDuo12cidr_2daudit3cli19validate__probe__ip(ip) {
+  const _bind = _M0MP28BeiLaDuo12cidr_2daudit4IPv45parse(ip);
+  if (_bind.$tag === 1) {
+    return new _M0DTPC16result6ResultGuRP38BeiLaDuo12cidr_2daudit3cli8CliErrorE2Ok(undefined);
+  } else {
+    const _Err = _bind;
+    const _message = _Err._0;
+    return new _M0DTPC16result6ResultGuRP38BeiLaDuo12cidr_2daudit3cli8CliErrorE3Err(_M0FP38BeiLaDuo12cidr_2daudit3cli15argument__error("invalid_probe", _message));
+  }
+}
 function _M0FP38BeiLaDuo12cidr_2daudit3cli3run(options, sources) {
   if (_M0IP38BeiLaDuo12cidr_2daudit3cli7CommandPB2Eq5equal(options.command, 0)) {
-    return _M0FP38BeiLaDuo12cidr_2daudit3cli8complete(0, "MoonCIDR Audit - offline Nginx IPv4 address-access analysis\n\nUsage:\n  mooncidr contexts CONFIG [OPTIONS]\n  mooncidr audit CONFIG [--context ID] [--strict] [OPTIONS]\n  mooncidr probe CONFIG IP --context ID [OPTIONS]\n  mooncidr validate CONFIG [OPTIONS]\n  mooncidr help\n  mooncidr version\n\nOptions:\n  --root DIRECTORY     Local input root, default '.'\n  --format FORMAT      text, json, or markdown; default text\n  --context ID         Exact selector from the contexts command\n  --strict             Audit also fails on warnings\n  --limits NAME=VALUE,...   Override positive integer resource limits\n\nLimit names: max_sources, max_total_chars, max_source_chars,\nmax_include_depth, max_include_expansions, max_directives,\nmax_contexts, max_context_depth, max_rules, max_audit_pairs.\nExample: --limits max_sources=32,max_include_depth=8\n\nCONFIG is relative to --root. Includes are anchored to CONFIG's directory.\nThis tool analyzes only the supported Nginx IPv4 allow/deny scope.\nA probe reports address-rule behavior; it does not authorize a request.\nIt does not infer a location from a URL or model authentication.\n\nExit codes: 0 completed; 1 audit gate failed; 2 input/IO error;\n3 unsupported or incomplete analysis; 4 resource budget exceeded.");
+    return _M0FP38BeiLaDuo12cidr_2daudit3cli8complete(0, "MoonCIDR Audit - offline Nginx IPv4 address-access analysis\n\nUsage:\n  mooncidr contexts CONFIG [OPTIONS]\n  mooncidr audit CONFIG [--context ID] [--strict] [OPTIONS]\n  mooncidr probe CONFIG IP --context ID [OPTIONS]\n  mooncidr validate CONFIG [OPTIONS]\n  mooncidr help\n  mooncidr version\n\nOptions:\n  --root DIRECTORY     Local input root, default '.'\n  --format FORMAT      text, json, or markdown; default text\n  --context ID         Exact selector from the contexts command\n  --strict             Audit also fails on warnings\n  --limits NAME=VALUE,...   Override positive integer resource limits\n  --                   End options; later arguments are literal paths/IPs\n\nLimit names: max_sources, max_total_chars, max_source_chars,\nmax_include_depth, max_include_expansions, max_directives,\nmax_contexts, max_context_depth, max_rules, max_audit_pairs.\nExample: --limits max_sources=32,max_include_depth=8\n\nCONFIG is relative to --root. Includes are anchored to CONFIG's directory.\nThis tool analyzes only the supported Nginx IPv4 allow/deny scope.\nA probe reports address-rule behavior; it does not authorize a request.\nIt does not infer a location from a URL or model authentication.\n\nExit codes: 0 completed; 1 audit gate failed; 2 input/IO error;\n3 unsupported or incomplete analysis; 4 resource budget exceeded.");
   }
   if (_M0IP38BeiLaDuo12cidr_2daudit3cli7CommandPB2Eq5equal(options.command, 1)) {
     return _M0FP38BeiLaDuo12cidr_2daudit3cli8complete(0, "MoonCIDR Audit Nginx analyzer 0.2.0\n");
@@ -10169,7 +10204,7 @@ function _M0FP38BeiLaDuo12cidr_2daudit3cli3run(options, sources) {
   if (_bind.$tag === 0) {
     const _Err = _bind;
     const _error = _Err._0;
-    return _M0FP38BeiLaDuo12cidr_2daudit3cli12cli__failure(_error);
+    return _M0FP38BeiLaDuo12cidr_2daudit3cli12cli__failure(_error, options.format);
   }
   let _tmp;
   const _p = options.format;
@@ -10190,7 +10225,7 @@ function _M0FP38BeiLaDuo12cidr_2daudit3cli3run(options, sources) {
     _tmp = false;
   }
   if (_tmp) {
-    return _M0FP38BeiLaDuo12cidr_2daudit3cli12cli__failure(_M0FP38BeiLaDuo12cidr_2daudit3cli15argument__error("invalid_format", "format must be text, json, or markdown"));
+    return _M0FP38BeiLaDuo12cidr_2daudit3cli12cli__failure(_M0FP38BeiLaDuo12cidr_2daudit3cli15argument__error("invalid_format", "format must be text, json, or markdown"), "text");
   }
   if (_M0IP38BeiLaDuo12cidr_2daudit3cli7CommandPB2Eq5equal(options.command, 4)) {
     _L: {
@@ -10206,7 +10241,23 @@ function _M0FP38BeiLaDuo12cidr_2daudit3cli3run(options, sources) {
         }
         break _L;
       }
-      return _M0FP38BeiLaDuo12cidr_2daudit3cli12cli__failure(_M0FP38BeiLaDuo12cidr_2daudit3cli15argument__error("invalid_arguments", "probe requires IP and context selector"));
+      return _M0FP38BeiLaDuo12cidr_2daudit3cli12cli__failure(_M0FP38BeiLaDuo12cidr_2daudit3cli15argument__error("invalid_arguments", "probe requires IP and context selector"), options.format);
+    }
+  }
+  if (_M0IP38BeiLaDuo12cidr_2daudit3cli7CommandPB2Eq5equal(options.command, 4)) {
+    const _p$3 = options.ip;
+    let _tmp$2;
+    if (_p$3 === undefined) {
+      _tmp$2 = $panic();
+    } else {
+      const _p$4 = _p$3;
+      _tmp$2 = _p$4;
+    }
+    const _bind$2 = _M0FP38BeiLaDuo12cidr_2daudit3cli19validate__probe__ip(_tmp$2);
+    if (_bind$2.$tag === 0) {
+      const _Err = _bind$2;
+      const _error = _Err._0;
+      return _M0FP38BeiLaDuo12cidr_2daudit3cli12cli__failure(_error, options.format);
     }
   }
   const _bind$2 = _M0FP38BeiLaDuo12cidr_2daudit5nginx31analyze__nginx__sources_2einner(options.entry, sources, options.limits);
@@ -10388,7 +10439,7 @@ function _M0FP38BeiLaDuo12cidr_2daudit3cli13positive__int(value) {
 function _M0FP38BeiLaDuo12cidr_2daudit3cli13parse__limits(text, base) {
   let parsed = base;
   const seen = [];
-  const _it = _M0MPC16string6String5split(text, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli13parse__limitsN7_2abindS3006, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli13parse__limitsN7_2abindS3006.length));
+  const _it = _M0MPC16string6String5split(text, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli13parse__limitsN7_2abindS3020, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli13parse__limitsN7_2abindS3020.length));
   while (true) {
     const _bind = _M0MPB4Iter4nextGRPC16string10StringViewE(_it);
     if (_bind === undefined) {
@@ -10396,7 +10447,7 @@ function _M0FP38BeiLaDuo12cidr_2daudit3cli13parse__limits(text, base) {
     } else {
       const _Some = _bind;
       const _assignment = _Some;
-      const parts = _M0MPB4Iter9to__arrayGRPC16string10StringViewE(_M0MPC16string10StringView5split(_assignment, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli13parse__limitsN7_2abindS3007, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli13parse__limitsN7_2abindS3007.length)));
+      const parts = _M0MPB4Iter9to__arrayGRPC16string10StringViewE(_M0MPC16string10StringView5split(_assignment, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli13parse__limitsN7_2abindS3021, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli13parse__limitsN7_2abindS3021.length)));
       if (parts.length !== 2) {
         return new _M0DTPC16result6ResultGRP38BeiLaDuo12cidr_2daudit5nginx6LimitsRP38BeiLaDuo12cidr_2daudit3cli8CliErrorE3Err(_M0FP38BeiLaDuo12cidr_2daudit3cli15argument__error("invalid_limit", "--limits requires comma-separated name=value assignments"));
       }
@@ -10546,10 +10597,16 @@ function _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__args(args) {
   let strict = false;
   let limits = defaults.limits;
   let index = 1;
+  let positional_only = false;
   while (true) {
     if (index < args.length) {
       const argument = _M0MPC15array5Array2atGsE(args, index);
-      if (_M0MPC16string6String11has__prefix(argument, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3024, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3024.length))) {
+      if (!positional_only && argument === "--") {
+        positional_only = true;
+        index = index + 1 | 0;
+        continue;
+      }
+      if (!positional_only && _M0MPC16string6String11has__prefix(argument, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3038, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3038.length))) {
         if (_M0MPC15array5Array8containsGsE(seen, argument)) {
           return new _M0DTPC16result6ResultGRP38BeiLaDuo12cidr_2daudit3cli7OptionsRP38BeiLaDuo12cidr_2daudit3cli8CliErrorE3Err(_M0FP38BeiLaDuo12cidr_2daudit3cli15argument__error("duplicate_option", `option appears more than once: ${argument}`));
         }
@@ -10587,16 +10644,16 @@ function _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__args(args) {
         if (_tmp) {
           return new _M0DTPC16result6ResultGRP38BeiLaDuo12cidr_2daudit3cli7OptionsRP38BeiLaDuo12cidr_2daudit3cli8CliErrorE3Err(_M0FP38BeiLaDuo12cidr_2daudit3cli15argument__error("unknown_option", `unknown option: ${argument}`));
         }
-        if ((index + 1 | 0) >= args.length || _M0MPC16string6String11has__prefix(_M0MPC15array5Array2atGsE(args, index + 1 | 0), new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3025, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3025.length))) {
+        if ((index + 1 | 0) >= args.length || _M0MPC16string6String11has__prefix(_M0MPC15array5Array2atGsE(args, index + 1 | 0), new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3039, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3039.length))) {
           return new _M0DTPC16result6ResultGRP38BeiLaDuo12cidr_2daudit3cli7OptionsRP38BeiLaDuo12cidr_2daudit3cli8CliErrorE3Err(_M0FP38BeiLaDuo12cidr_2daudit3cli15argument__error("missing_value", `missing value for ${argument}`));
         }
         const value = _M0MPC15array5Array2atGsE(args, index + 1 | 0);
-        if (value === "" || _M0MPC16string6String8contains(value, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3026, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3026.length))) {
+        if (value === "" || _M0MPC16string6String8contains(value, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3040, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3040.length))) {
           return new _M0DTPC16result6ResultGRP38BeiLaDuo12cidr_2daudit3cli7OptionsRP38BeiLaDuo12cidr_2daudit3cli8CliErrorE3Err(_M0FP38BeiLaDuo12cidr_2daudit3cli15argument__error("invalid_value", `empty or NUL-containing value for ${argument}`));
         }
         switch (argument) {
           case "--root": {
-            if (_M0MPC16string6String8contains(value, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3027, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3027.length))) {
+            if (_M0MPC16string6String8contains(value, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3041, 0, _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__argsN7_2abindS3041.length))) {
               return new _M0DTPC16result6ResultGRP38BeiLaDuo12cidr_2daudit3cli7OptionsRP38BeiLaDuo12cidr_2daudit3cli8CliErrorE3Err(_M0FP38BeiLaDuo12cidr_2daudit3cli15argument__error("invalid_root", "--root must name a local directory"));
             }
             input_root = value;
@@ -10673,12 +10730,20 @@ function _M0FP38BeiLaDuo12cidr_2daudit3cli11parse__args(args) {
       return new _M0DTPC16result6ResultGRP38BeiLaDuo12cidr_2daudit3cli7OptionsRP38BeiLaDuo12cidr_2daudit3cli8CliErrorE3Err(_M0FP38BeiLaDuo12cidr_2daudit3cli15argument__error("missing_context", "probe requires --context ID; use contexts to discover IDs"));
     }
   }
+  if (_M0IP38BeiLaDuo12cidr_2daudit3cli7CommandPB2Eq5equal(command, 4)) {
+    const _bind$2 = _M0FP38BeiLaDuo12cidr_2daudit3cli19validate__probe__ip(_M0MPC15array5Array2atGsE(positionals, 1));
+    if (_bind$2.$tag === 0) {
+      const _Err = _bind$2;
+      const _error = _Err._0;
+      return new _M0DTPC16result6ResultGRP38BeiLaDuo12cidr_2daudit3cli7OptionsRP38BeiLaDuo12cidr_2daudit3cli8CliErrorE3Err(_error);
+    }
+  }
   return new _M0DTPC16result6ResultGRP38BeiLaDuo12cidr_2daudit3cli7OptionsRP38BeiLaDuo12cidr_2daudit3cli8CliErrorE2Ok(new _M0TP38BeiLaDuo12cidr_2daudit3cli7Options(command, input_root, entry, context_selector, _M0IP38BeiLaDuo12cidr_2daudit3cli7CommandPB2Eq5equal(command, 4) ? _M0MPC15array5Array2atGsE(positionals, 1) : undefined, format, strict, limits));
 }
 function _M0FP38BeiLaDuo12cidr_2daudit6fileio17parent__directory(path) {
-  const parts = _M0MPB4Iter9to__arrayGRPC16string10StringViewE(_M0MPB4Iter3mapGRPC16string10StringViewsE(_M0MPC16string6String5split(path, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit6fileio17parent__directoryN7_2abindS3055, 0, _M0FP38BeiLaDuo12cidr_2daudit6fileio17parent__directoryN7_2abindS3055.length)), (view) => _M0MPC16string10StringView9to__owned(view)));
+  const parts = _M0MPB4Iter9to__arrayGRPC16string10StringViewE(_M0MPB4Iter3mapGRPC16string10StringViewsE(_M0MPC16string6String5split(path, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit6fileio17parent__directoryN7_2abindS3073, 0, _M0FP38BeiLaDuo12cidr_2daudit6fileio17parent__directoryN7_2abindS3073.length)), (view) => _M0MPC16string10StringView9to__owned(view)));
   _M0MPC15array5Array3popGsE(parts);
-  return _M0MPC15array5Array4joinGsE(parts, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit6fileio17parent__directoryN7_2abindS3056, 0, _M0FP38BeiLaDuo12cidr_2daudit6fileio17parent__directoryN7_2abindS3056.length));
+  return _M0MPC15array5Array4joinGsE(parts, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit6fileio17parent__directoryN7_2abindS3074, 0, _M0FP38BeiLaDuo12cidr_2daudit6fileio17parent__directoryN7_2abindS3074.length));
 }
 function _M0FP38BeiLaDuo12cidr_2daudit6fileio17io__error_2einner(code, message, path, line) {
   return new _M0TP38BeiLaDuo12cidr_2daudit5nginx11ConfigError(code, message, path, line);
@@ -10827,7 +10892,7 @@ function _M0FP38BeiLaDuo12cidr_2daudit6fileio16include__targets(state, operand, 
     const _error = _Err._0;
     return new _M0DTPC16result6ResultGRPB5ArrayGsERP38BeiLaDuo12cidr_2daudit5nginx11ConfigErrorE3Err(new _M0TP38BeiLaDuo12cidr_2daudit5nginx11ConfigError(_error.code, _error.message, source, line));
   }
-  if (!_M0MPC16string6String8contains(pattern, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit6fileio16include__targetsN7_2abindS3114, 0, _M0FP38BeiLaDuo12cidr_2daudit6fileio16include__targetsN7_2abindS3114.length)) && !_M0MPC16string6String8contains(pattern, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit6fileio16include__targetsN7_2abindS3115, 0, _M0FP38BeiLaDuo12cidr_2daudit6fileio16include__targetsN7_2abindS3115.length))) {
+  if (!_M0MPC16string6String8contains(pattern, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit6fileio16include__targetsN7_2abindS3132, 0, _M0FP38BeiLaDuo12cidr_2daudit6fileio16include__targetsN7_2abindS3132.length)) && !_M0MPC16string6String8contains(pattern, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit6fileio16include__targetsN7_2abindS3133, 0, _M0FP38BeiLaDuo12cidr_2daudit6fileio16include__targetsN7_2abindS3133.length))) {
     return new _M0DTPC16result6ResultGRPB5ArrayGsERP38BeiLaDuo12cidr_2daudit5nginx11ConfigErrorE2Ok([pattern]);
   }
   const directory = _M0FP38BeiLaDuo12cidr_2daudit6fileio17parent__directory(pattern);
@@ -11111,7 +11176,7 @@ function _M0FP38BeiLaDuo12cidr_2daudit6fileio13load__sources(root, entry, limits
     const _error = _Err._0;
     return new _M0DTPC16result6ResultGRPB5ArrayGRP38BeiLaDuo12cidr_2daudit5nginx10SourceFileERP38BeiLaDuo12cidr_2daudit5nginx11ConfigErrorE3Err(_error);
   }
-  if (_M0MPC16string6String11has__prefix(normalized, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit6fileio13load__sourcesN7_2abindS3204, 0, _M0FP38BeiLaDuo12cidr_2daudit6fileio13load__sourcesN7_2abindS3204.length)) || _M0MPC16string6String8contains(normalized, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit6fileio13load__sourcesN7_2abindS3205, 0, _M0FP38BeiLaDuo12cidr_2daudit6fileio13load__sourcesN7_2abindS3205.length))) {
+  if (_M0MPC16string6String11has__prefix(normalized, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit6fileio13load__sourcesN7_2abindS3222, 0, _M0FP38BeiLaDuo12cidr_2daudit6fileio13load__sourcesN7_2abindS3222.length)) || _M0MPC16string6String8contains(normalized, new _M0TPC16string10StringView(_M0FP38BeiLaDuo12cidr_2daudit6fileio13load__sourcesN7_2abindS3223, 0, _M0FP38BeiLaDuo12cidr_2daudit6fileio13load__sourcesN7_2abindS3223.length))) {
     return new _M0DTPC16result6ResultGRPB5ArrayGRP38BeiLaDuo12cidr_2daudit5nginx10SourceFileERP38BeiLaDuo12cidr_2daudit5nginx11ConfigErrorE3Err(_M0FP38BeiLaDuo12cidr_2daudit6fileio17io__error_2einner("invalid_entry", "CONFIG must be relative to --root", entry, 0));
   }
   const _bind$2 = _M0FP38BeiLaDuo12cidr_2daudit5nginx19parse__source__file(new _M0TP38BeiLaDuo12cidr_2daudit5nginx10SourceFile(normalized, ""), limits);
@@ -11134,7 +11199,7 @@ function _M0FP38BeiLaDuo12cidr_2daudit6fileio13load__sources(root, entry, limits
   }
 }
 function _M0FP48BeiLaDuo12cidr_2daudit3cmd11nginx_2dcli13file__failure(error, format) {
-  const code = error.code === "limit_exceeded" ? 4 : _M0MPC16string6String11has__prefix(error.code, new _M0TPC16string10StringView(_M0FP48BeiLaDuo12cidr_2daudit3cmd11nginx_2dcli13file__failureN7_2abindS3222, 0, _M0FP48BeiLaDuo12cidr_2daudit3cmd11nginx_2dcli13file__failureN7_2abindS3222.length)) ? 3 : 2;
+  const code = error.code === "limit_exceeded" ? 4 : _M0MPC16string6String11has__prefix(error.code, new _M0TPC16string10StringView(_M0FP48BeiLaDuo12cidr_2daudit3cmd11nginx_2dcli13file__failureN7_2abindS3240, 0, _M0FP48BeiLaDuo12cidr_2daudit3cmd11nginx_2dcli13file__failureN7_2abindS3240.length)) ? 3 : 2;
   _M0FP48BeiLaDuo12cidr_2daudit3cmd11nginx_2dcli6finish(code, "", _M0FP38BeiLaDuo12cidr_2daudit5nginx13render__error(error, format));
 }
 (() => {
@@ -11161,7 +11226,8 @@ function _M0FP48BeiLaDuo12cidr_2daudit3cmd11nginx_2dcli13file__failure(error, fo
   } else {
     const _Err = _bind$3;
     const _error = _Err._0;
-    _M0FP48BeiLaDuo12cidr_2daudit3cmd11nginx_2dcli6finish(2, "", `${_error.code}: ${_error.message}`);
+    const result = _M0FP38BeiLaDuo12cidr_2daudit3cli17argument__failure(_error, argument_list);
+    _M0FP48BeiLaDuo12cidr_2daudit3cmd11nginx_2dcli6finish(result.exit_code, result.stdout, result.stderr);
     return;
   }
   let sources;

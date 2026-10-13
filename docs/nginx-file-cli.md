@@ -76,6 +76,8 @@ node tools/cidr-audit.mjs audit nginx.conf --root examples/nginx/files --limits 
 python tools/verify_files.py --output _build/ci/file-workflow.json
 ```
 
+维护者更新 CLI 后，需要同步 `dist/cidr-audit.js`，然后运行 `python tools/verify_distribution.py`。该工具将完整真实文件场景分别运行于新构建与交付脚本，逐项比较退出码、stdout 和 stderr；CI 会拒绝行为不一致的交付脚本。
+
 真实服务对照需要另外安装 Nginx；脚本只创建自己的临时服务与静态文件，并在结束时关闭它：
 
 ```powershell
