@@ -1,0 +1,14 @@
+MoonNginx Access Audit
+Copyright 2026 MoonNginx Access Audit contributors
+Project maintainer: 高本乾 (BeiLaDuo)
+
+This project is distributed under the Apache License, Version 2.0.
+The original MoonCIDR Audit base and subsequent Nginx-specific development
+remain attributed in the Git history, README and THIRD_PARTY.md.
+
+This product includes software developed at the International Digital Economy
+Academy and the MoonNginx parser by its upstream contributors. Their complete
+applicable license and notice texts are preserved under third_party/.
+See third_party/moonbit-core/NOTICE and third_party/moonnginx/NOTICE.
+
+This notice does not replace or modify any applicable license or upstream notice.

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "reviewed_on": "2026-10-20",
+  "hash_method": "SHA-256 of UTF-8 text with CRLF normalized to LF and BOM removed",
+  "components": [
+    {
+      "name": "LuoYunxin1/moonnginx",
+      "version": "0.2.0",
+      "kind": "moon-package",
+      "source": "https://github.com/LuoYunxin1/moonnginx",
+      "license": "Apache-2.0",
+      "legal_files": [
+        {
+          "path": "third_party/moonnginx/LICENSE",
+          "sha256_lf_utf8": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "path": "third_party/moonnginx/NOTICE",
+          "sha256_lf_utf8": "8867ac58c059add206976b93467056c2dfe6e57ea5c3fbc3868519a71589fa86"
+        }
+      ]
+    },
+    {
+      "name": "moonbitlang/core",
+      "version": "moonc v0.10.16+b1a0e846e",
+      "kind": "toolchain-standard-library",
+      "source": "https://github.com/moonbitlang/core",
+      "license": "Apache-2.0; additional upstream notices retained",
+      "legal_files": [
+        {
+          "path": "third_party/moonbit-core/LICENSE",
+          "sha256_lf_utf8": "86460c45017ffacb9aa9e18850fa9fdb036339dc8851125465f4a3f3442fc894"
+        },
+        {
+          "path": "third_party/moonbit-core/NOTICE",
+          "sha256_lf_utf8": "047a7cd5e93c10a8a753b7f152c371ef309b523c4d9b945ec5776321e7e602fb"
+        }
+      ]
+    }
+  ]
+}

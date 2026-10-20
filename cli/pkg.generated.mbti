@@ -28,7 +28,7 @@ pub fn CliError::summary(Self) -> String
 pub fn CliError::to_repr(Self) -> @debug.Repr
 
 pub(all) struct CliResult {
-  exit_code : Int
+  exit_code : Int32
   stdout : String
   stderr : String
 } derive(Eq, @debug.Debug)

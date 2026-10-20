@@ -38,7 +38,7 @@ pub fn uncovered_ranges(CidrBlock, Array[AddressRange]) -> Array[AddressRange]
 pub struct AddressRange {
   first : IPv4
   last : IPv4
-  source_count : Int
+  source_count : Int32
 } derive(Eq, @debug.Debug)
 pub fn AddressRange::address_count_label(Self) -> String
 pub fn AddressRange::contains_ip(Self, IPv4) -> Bool
@@ -48,40 +48,40 @@ pub fn AddressRange::first(Self) -> IPv4
 pub fn AddressRange::from_block(CidrBlock) -> Self
 pub fn AddressRange::last(Self) -> IPv4
 pub fn AddressRange::merge(Self, Self) -> Result[Self, String]
-pub fn AddressRange::new(IPv4, IPv4, source_count? : Int) -> Result[Self, String]
+pub fn AddressRange::new(IPv4, IPv4, source_count? : Int32) -> Result[Self, String]
 pub fn AddressRange::not_equal(Self, Self) -> Bool
 pub fn AddressRange::overlaps(Self, Self) -> Bool
-pub fn AddressRange::source_count(Self) -> Int
+pub fn AddressRange::source_count(Self) -> Int32
 pub fn AddressRange::summary(Self) -> String
 pub fn AddressRange::to_repr(Self) -> @debug.Repr
 pub fn AddressRange::to_string(Self) -> String
 pub fn AddressRange::touches(Self, Self) -> Bool
 
 pub struct AggregationReport {
-  input_count : Int
-  valid_count : Int
-  duplicate_count : Int
-  contained_count : Int
-  merged_pair_count : Int
+  input_count : Int32
+  valid_count : Int32
+  duplicate_count : Int32
+  contained_count : Int32
+  merged_pair_count : Int32
   blocks : Array[CidrBlock]
   errors : Array[String]
 } derive(@debug.Debug)
 pub fn AggregationReport::blocks(Self) -> Array[CidrBlock]
 pub fn AggregationReport::changed(Self) -> Bool
-pub fn AggregationReport::contained_count(Self) -> Int
-pub fn AggregationReport::duplicate_count(Self) -> Int
+pub fn AggregationReport::contained_count(Self) -> Int32
+pub fn AggregationReport::duplicate_count(Self) -> Int32
 pub fn AggregationReport::errors(Self) -> Array[String]
-pub fn AggregationReport::input_count(Self) -> Int
-pub fn AggregationReport::merged_pair_count(Self) -> Int
-pub fn AggregationReport::output_count(Self) -> Int
-pub fn AggregationReport::reduction_count(Self) -> Int
+pub fn AggregationReport::input_count(Self) -> Int32
+pub fn AggregationReport::merged_pair_count(Self) -> Int32
+pub fn AggregationReport::output_count(Self) -> Int32
+pub fn AggregationReport::reduction_count(Self) -> Int32
 pub fn AggregationReport::summary(Self) -> String
 pub fn AggregationReport::text_report(Self) -> String
 pub fn AggregationReport::to_repr(Self) -> @debug.Repr
-pub fn AggregationReport::valid_count(Self) -> Int
+pub fn AggregationReport::valid_count(Self) -> Int32
 
 pub struct AuditPolicy {
-  wide_allow_prefix : Int
+  wide_allow_prefix : Int32
   flag_private : Bool
   flag_special_ranges : Bool
   flag_non_canonical : Bool
@@ -97,37 +97,37 @@ pub fn AuditPolicy::not_equal(Self, Self) -> Bool
 pub fn AuditPolicy::quiet() -> Self
 pub fn AuditPolicy::strict() -> Self
 pub fn AuditPolicy::to_repr(Self) -> @debug.Repr
-pub fn AuditPolicy::wide_allow_prefix(Self) -> Int
+pub fn AuditPolicy::wide_allow_prefix(Self) -> Int32
 
 pub struct AuditReport {
   rules : Array[Rule]
   findings : Array[Finding]
   parse_errors : Array[String]
 } derive(@debug.Debug)
-pub fn AuditReport::count_hint_kind(Self, HintKind) -> Int
-pub fn AuditReport::count_kind(Self, FindingKind) -> Int
-pub fn AuditReport::count_severity(Self, Severity) -> Int
-pub fn AuditReport::critical_count(Self) -> Int
+pub fn AuditReport::count_hint_kind(Self, HintKind) -> Int32
+pub fn AuditReport::count_kind(Self, FindingKind) -> Int32
+pub fn AuditReport::count_severity(Self, Severity) -> Int32
+pub fn AuditReport::critical_count(Self) -> Int32
 pub fn AuditReport::evaluate_gate(Self, GatePolicy) -> GateResult
-pub fn AuditReport::finding_count(Self) -> Int
+pub fn AuditReport::finding_count(Self) -> Int32
 pub fn AuditReport::findings(Self) -> Array[Finding]
 pub fn AuditReport::fix_hints(Self) -> Array[FixHint]
 pub fn AuditReport::hint_report(Self) -> String
-pub fn AuditReport::info_count(Self) -> Int
+pub fn AuditReport::info_count(Self) -> Int32
 pub fn AuditReport::json_report(Self) -> String
 pub fn AuditReport::parse_errors(Self) -> Array[String]
 pub fn AuditReport::recommended_action(Self) -> String
 pub fn AuditReport::risk_level(Self) -> String
-pub fn AuditReport::risk_score(Self) -> Int
+pub fn AuditReport::risk_score(Self) -> Int32
 pub fn AuditReport::rules(Self) -> Array[Rule]
 pub fn AuditReport::summary_table(Self) -> String
 pub fn AuditReport::text_report(Self) -> String
 pub fn AuditReport::to_repr(Self) -> @debug.Repr
-pub fn AuditReport::warning_count(Self) -> Int
+pub fn AuditReport::warning_count(Self) -> Int32
 
 pub struct CidrBlock {
   network : IPv4
-  prefix : Int
+  prefix : Int32
 } derive(Eq, @debug.Debug)
 pub fn CidrBlock::broadcast(Self) -> IPv4
 pub fn CidrBlock::contains_block(Self, Self) -> Bool
@@ -136,39 +136,39 @@ pub fn CidrBlock::equal(Self, Self) -> Bool
 pub fn CidrBlock::equal_range(Self, Self) -> Bool
 pub fn CidrBlock::has_host_bits(String) -> Bool
 pub fn CidrBlock::network(Self) -> IPv4
-pub fn CidrBlock::new(IPv4, Int) -> Result[Self, String]
-pub fn CidrBlock::new_unchecked(IPv4, Int) -> Self
+pub fn CidrBlock::new(IPv4, Int32) -> Result[Self, String]
+pub fn CidrBlock::new_unchecked(IPv4, Int32) -> Self
 pub fn CidrBlock::not_equal(Self, Self) -> Bool
 pub fn CidrBlock::overlaps(Self, Self) -> Bool
 pub fn CidrBlock::parse(String) -> Result[Self, String]
-pub fn CidrBlock::parse_raw(String) -> Result[(IPv4, Int), String]
-pub fn CidrBlock::prefix(Self) -> Int
+pub fn CidrBlock::parse_raw(String) -> Result[(IPv4, Int32), String]
+pub fn CidrBlock::prefix(Self) -> Int32
 pub fn CidrBlock::size_label(Self) -> String
 pub fn CidrBlock::to_repr(Self) -> @debug.Repr
 pub fn CidrBlock::to_string(Self) -> String
 
 pub struct CoverageStats {
-  total_rules : Int
-  allow_rules : Int
-  deny_rules : Int
-  private_rules : Int
-  public_rules : Int
-  special_rules : Int
-  widest_prefix : Int
-  narrowest_prefix : Int
+  total_rules : Int32
+  allow_rules : Int32
+  deny_rules : Int32
+  private_rules : Int32
+  public_rules : Int32
+  special_rules : Int32
+  widest_prefix : Int32
+  narrowest_prefix : Int32
 } derive(Eq, @debug.Debug)
-pub fn CoverageStats::allow_rules(Self) -> Int
-pub fn CoverageStats::deny_rules(Self) -> Int
+pub fn CoverageStats::allow_rules(Self) -> Int32
+pub fn CoverageStats::deny_rules(Self) -> Int32
 pub fn CoverageStats::equal(Self, Self) -> Bool
-pub fn CoverageStats::narrowest_prefix(Self) -> Int
+pub fn CoverageStats::narrowest_prefix(Self) -> Int32
 pub fn CoverageStats::not_equal(Self, Self) -> Bool
-pub fn CoverageStats::private_rules(Self) -> Int
-pub fn CoverageStats::public_rules(Self) -> Int
-pub fn CoverageStats::special_rules(Self) -> Int
+pub fn CoverageStats::private_rules(Self) -> Int32
+pub fn CoverageStats::public_rules(Self) -> Int32
+pub fn CoverageStats::special_rules(Self) -> Int32
 pub fn CoverageStats::summary(Self) -> String
 pub fn CoverageStats::to_repr(Self) -> @debug.Repr
-pub fn CoverageStats::total_rules(Self) -> Int
-pub fn CoverageStats::widest_prefix(Self) -> Int
+pub fn CoverageStats::total_rules(Self) -> Int32
+pub fn CoverageStats::widest_prefix(Self) -> Int32
 
 pub struct Decision {
   matched : Bool
@@ -188,12 +188,12 @@ pub fn Decision::to_repr(Self) -> @debug.Repr
 pub struct DiffReport {
   changes : Array[RuleChange]
 } derive(@debug.Debug)
-pub fn DiffReport::change_count(Self) -> Int
+pub fn DiffReport::change_count(Self) -> Int32
 pub fn DiffReport::changes(Self) -> Array[RuleChange]
-pub fn DiffReport::count_kind(Self, RuleChangeKind) -> Int
+pub fn DiffReport::count_kind(Self, RuleChangeKind) -> Int32
 pub fn DiffReport::is_empty(Self) -> Bool
 pub fn DiffReport::risk_level(Self) -> String
-pub fn DiffReport::risky_count(Self) -> Int
+pub fn DiffReport::risky_count(Self) -> Int32
 pub fn DiffReport::text_report(Self) -> String
 pub fn DiffReport::to_repr(Self) -> @debug.Repr
 
@@ -251,19 +251,19 @@ pub fn FixHint::to_repr(Self) -> @debug.Repr
 
 pub struct GatePolicy {
   name : String
-  max_critical : Int
-  max_warning : Int
-  max_risk_score : Int
+  max_critical : Int32
+  max_warning : Int32
+  max_risk_score : Int32
   allow_parse_errors : Bool
 } derive(Eq, @debug.Debug)
 pub fn GatePolicy::allow_parse_errors(Self) -> Bool
 pub fn GatePolicy::development() -> Self
 pub fn GatePolicy::equal(Self, Self) -> Bool
-pub fn GatePolicy::max_critical(Self) -> Int
-pub fn GatePolicy::max_risk_score(Self) -> Int
-pub fn GatePolicy::max_warning(Self) -> Int
+pub fn GatePolicy::max_critical(Self) -> Int32
+pub fn GatePolicy::max_risk_score(Self) -> Int32
+pub fn GatePolicy::max_warning(Self) -> Int32
 pub fn GatePolicy::name(Self) -> String
-pub fn GatePolicy::new(String, Int, Int, Int, allow_parse_errors? : Bool) -> Result[Self, String]
+pub fn GatePolicy::new(String, Int32, Int32, Int32, allow_parse_errors? : Bool) -> Result[Self, String]
 pub fn GatePolicy::not_equal(Self, Self) -> Bool
 pub fn GatePolicy::release() -> Self
 pub fn GatePolicy::review() -> Self
@@ -272,16 +272,16 @@ pub fn GatePolicy::to_repr(Self) -> @debug.Repr
 
 pub struct GateReason {
   code : String
-  actual : Int
-  limit : Int
+  actual : Int32
+  limit : Int32
   message : String
 } derive(Eq, @debug.Debug)
-pub fn GateReason::actual(Self) -> Int
+pub fn GateReason::actual(Self) -> Int32
 pub fn GateReason::code(Self) -> String
 pub fn GateReason::equal(Self, Self) -> Bool
-pub fn GateReason::limit(Self) -> Int
+pub fn GateReason::limit(Self) -> Int32
 pub fn GateReason::message(Self) -> String
-pub fn GateReason::new(String, Int, Int, String) -> Self
+pub fn GateReason::new(String, Int32, Int32, String) -> Self
 pub fn GateReason::not_equal(Self, Self) -> Bool
 pub fn GateReason::summary(Self) -> String
 pub fn GateReason::to_repr(Self) -> @debug.Repr
@@ -289,16 +289,16 @@ pub fn GateReason::to_repr(Self) -> @debug.Repr
 pub struct GateResult {
   policy : GatePolicy
   passed : Bool
-  risk_score : Int
+  risk_score : Int32
   reasons : Array[GateReason]
 } derive(@debug.Debug)
 pub fn GateResult::decision(Self) -> String
 pub fn GateResult::has_reason(Self, String) -> Bool
 pub fn GateResult::passed(Self) -> Bool
 pub fn GateResult::policy(Self) -> GatePolicy
-pub fn GateResult::reason_count(Self) -> Int
+pub fn GateResult::reason_count(Self) -> Int32
 pub fn GateResult::reasons(Self) -> Array[GateReason]
-pub fn GateResult::risk_score(Self) -> Int
+pub fn GateResult::risk_score(Self) -> Int32
 pub fn GateResult::text_report(Self) -> String
 pub fn GateResult::to_repr(Self) -> @debug.Repr
 
@@ -318,7 +318,7 @@ pub fn HintKind::not_equal(Self, Self) -> Bool
 pub fn HintKind::to_repr(Self) -> @debug.Repr
 
 pub struct IPv4 {
-  value : UInt
+  value : UInt32
 } derive(Eq, @debug.Debug)
 pub fn IPv4::equal(Self, Self) -> Bool
 pub fn IPv4::is_limited_broadcast(Self) -> Bool
@@ -328,13 +328,13 @@ pub fn IPv4::is_multicast(Self) -> Bool
 pub fn IPv4::is_private(Self) -> Bool
 pub fn IPv4::is_public(Self) -> Bool
 pub fn IPv4::is_unspecified(Self) -> Bool
-pub fn IPv4::new(UInt) -> Self
+pub fn IPv4::new(UInt32) -> Self
 pub fn IPv4::not_equal(Self, Self) -> Bool
 pub fn IPv4::parse(String) -> Result[Self, String]
 pub fn IPv4::scope_label(Self) -> String
 pub fn IPv4::to_dotted(Self) -> String
 pub fn IPv4::to_repr(Self) -> @debug.Repr
-pub fn IPv4::value(Self) -> UInt
+pub fn IPv4::value(Self) -> UInt32
 
 pub(all) enum ImportFormat {
   PlainRules
@@ -347,7 +347,7 @@ pub fn ImportFormat::not_equal(Self, Self) -> Bool
 pub fn ImportFormat::to_repr(Self) -> @debug.Repr
 
 pub struct ImportIssue {
-  line : Int
+  line : Int32
   level : ImportIssueLevel
   code : String
   message : String
@@ -357,9 +357,9 @@ pub fn ImportIssue::code(Self) -> String
 pub fn ImportIssue::equal(Self, Self) -> Bool
 pub fn ImportIssue::input(Self) -> String
 pub fn ImportIssue::level(Self) -> ImportIssueLevel
-pub fn ImportIssue::line(Self) -> Int
+pub fn ImportIssue::line(Self) -> Int32
 pub fn ImportIssue::message(Self) -> String
-pub fn ImportIssue::new(Int, ImportIssueLevel, String, String, String) -> Self
+pub fn ImportIssue::new(Int32, ImportIssueLevel, String, String, String) -> Self
 pub fn ImportIssue::not_equal(Self, Self) -> Bool
 pub fn ImportIssue::summary(Self) -> String
 pub fn ImportIssue::to_repr(Self) -> @debug.Repr
@@ -375,23 +375,23 @@ pub fn ImportIssueLevel::to_repr(Self) -> @debug.Repr
 
 pub struct ImportReport {
   format : ImportFormat
-  source_count : Int
+  source_count : Int32
   rules : Array[Rule]
   issues : Array[ImportIssue]
 } derive(@debug.Debug)
-pub fn ImportReport::accepted_count(Self) -> Int
+pub fn ImportReport::accepted_count(Self) -> Int32
 pub fn ImportReport::can_audit(Self) -> Bool
-pub fn ImportReport::error_count(Self) -> Int
+pub fn ImportReport::error_count(Self) -> Int32
 pub fn ImportReport::format(Self) -> ImportFormat
 pub fn ImportReport::is_clean(Self) -> Bool
 pub fn ImportReport::issues(Self) -> Array[ImportIssue]
 pub fn ImportReport::rules(Self) -> Array[Rule]
-pub fn ImportReport::source_count(Self) -> Int
+pub fn ImportReport::source_count(Self) -> Int32
 pub fn ImportReport::summary(Self) -> String
 pub fn ImportReport::text_report(Self) -> String
 pub fn ImportReport::to_repr(Self) -> @debug.Repr
 pub fn ImportReport::to_ruleset(Self) -> RuleSet
-pub fn ImportReport::warning_count(Self) -> Int
+pub fn ImportReport::warning_count(Self) -> Int32
 
 pub struct Rule {
   id : String
@@ -487,7 +487,7 @@ pub(all) enum Severity {
 pub fn Severity::equal(Self, Self) -> Bool
 pub fn Severity::label(Self) -> String
 pub fn Severity::not_equal(Self, Self) -> Bool
-pub fn Severity::score(Self) -> Int
+pub fn Severity::score(Self) -> Int32
 pub fn Severity::to_repr(Self) -> @debug.Repr
 
 // Type aliases

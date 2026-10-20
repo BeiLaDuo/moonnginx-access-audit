@@ -79,6 +79,9 @@ jobs:
       - name: Package inventory
         run: moon package --list
 
+      - name: Check dependency notices and README links
+        run: python tools/verify_repository.py --check-package --output _build/ci/repository.json
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
