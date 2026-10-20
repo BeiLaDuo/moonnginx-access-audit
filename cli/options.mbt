@@ -172,10 +172,13 @@ pub fn parse_args(args : Array[String]) -> Result[Options, CliError] {
           context_selector = Some(value)
         }
         "--format" => {
-          if value != "text" && value != "json" && value != "markdown" {
+          if value != "text" &&
+            value != "json" &&
+            value != "markdown" &&
+            value != "sarif" {
             return Err(
               argument_error(
-                "invalid_format", "format must be text, json, or markdown",
+                "invalid_format", "format must be text, json, markdown, or sarif",
               ),
             )
           }
@@ -195,6 +198,11 @@ pub fn parse_args(args : Array[String]) -> Result[Options, CliError] {
     }
   }
   let expected = if command == Probe { 2 } else { 1 }
+  if format == "sarif" && command != Audit {
+    return Err(
+      argument_error("invalid_format", "SARIF is available only for audit"),
+    )
+  }
   if positionals.length() != expected {
     return Err(
       argument_error(

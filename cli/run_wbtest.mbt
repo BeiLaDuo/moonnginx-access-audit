@@ -4,6 +4,63 @@ fn fixture_source(content : String) -> Array[@nginx.SourceFile] {
 }
 
 ///|
+test "SARIF audit keeps gate failures and configuration rule origins" {
+  let options = parse_args([
+    "audit", "nginx.conf", "--context", "http[1]/server[1]", "--format", "sarif",
+  ]).unwrap()
+  let result = run(
+    options,
+    fixture_source("http { server { allow all; deny all; } }"),
+  )
+  assert_eq(result.exit_code, 1)
+  assert_eq(result.stderr, "")
+  let log = @json.parse(result.stdout)
+  assert_eq(json_string(json_member(log, "version")), "2.1.0")
+  let report = json_array(json_member(log, "runs"))[0]
+  let items = json_array(json_member(report, "results"))
+  assert_true(
+    items.any(fn(item) {
+      json_string(json_member(item, "ruleId")) == "unrestricted_allow" &&
+      json_string(json_member(item, "level")) == "error"
+    }),
+  )
+  for item in items {
+    assert_eq(
+      json_string(json_member(json_member(item, "properties"), "context")),
+      "http[1]/server[1]",
+    )
+  }
+}
+
+///|
+test "unsupported analysis never produces a successful SARIF invocation" {
+  let result = run(
+    parse_args(["audit", "nginx.conf", "--format", "sarif"]).unwrap(),
+    fixture_source("http { server { allow ::1; } }"),
+  )
+  assert_eq(result.exit_code, 3)
+  let report = json_array(json_member(@json.parse(result.stdout), "runs"))[0]
+  assert_eq(json_array(json_member(report, "results")).length(), 0)
+  let invocation = json_array(json_member(report, "invocations"))[0]
+  assert_eq(json_member(invocation, "executionSuccessful"), Json(false))
+  assert_true(
+    json_array(json_member(invocation, "toolExecutionNotifications")).length() >
+    0,
+  )
+}
+
+///|
+test "SARIF cannot silently change the output contract of other commands" {
+  for command in ["contexts", "validate", "probe"] {
+    assert_true(
+      parse_args([command, "nginx.conf", "--format", "sarif"]) is Err(_),
+    )
+  }
+  let options = parse_args(["validate", "nginx.conf"]).unwrap()
+  assert_eq(run({ ..options, format: "sarif", }, []).exit_code, 2)
+}
+
+///|
 test "argument errors honor explicit report formats and ignore literal option-like paths" {
   let args = ["validate", "missing.conf", "--format", "json", "--unknown\"\n"]
   let error = match parse_args(args) {

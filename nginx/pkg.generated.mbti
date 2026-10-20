@@ -10,7 +10,7 @@ import {
 // Values
 pub fn analyze_nginx_sources(String, Array[SourceFile], limits? : Limits) -> Result[Analysis, ConfigError]
 
-pub fn check_report_budget(Analysis, String?, Int, audits? : Array[ContextAudit]) -> Result[Unit, ConfigError]
+pub fn check_report_budget(Analysis, String?, Int32, audits? : Array[ContextAudit]) -> Result[Unit, ConfigError]
 
 pub fn include_path_matches(String, String) -> Bool
 
@@ -28,6 +28,8 @@ pub fn render_error(ConfigError, String) -> String
 
 pub fn render_probe(ProbeResult, String) -> String
 
+pub fn render_sarif(Analysis, Array[ContextAudit], selector? : String?) -> String
+
 pub fn resolve_include_path(String, String) -> Result[String, ConfigError]
 
 // Errors
@@ -43,7 +45,7 @@ pub(all) struct AccessContext {
   declared_rules : Array[AccessRule]
   rules : Array[AccessRule]
   diagnostics : Array[Diagnostic]
-  audit_pair_budget : Int
+  audit_pair_budget : Int32
 } derive(Eq, @debug.Debug)
 pub fn AccessContext::audit(Self) -> Result[ContextAudit, ConfigError]
 pub fn AccessContext::equal(Self, Self) -> Bool
@@ -80,7 +82,7 @@ pub(all) struct Analysis {
   include_edges : Array[IncludeEdge]
   contexts : Array[AccessContext]
   diagnostics : Array[Diagnostic]
-  audit_pair_budget : Int
+  audit_pair_budget : Int32
 } derive(Eq, @debug.Debug)
 pub fn Analysis::audits(Self) -> Result[Array[ContextAudit], ConfigError]
 pub fn Analysis::context(Self, String) -> Result[AccessContext, ConfigError]
@@ -106,7 +108,7 @@ pub(all) struct ConfigError {
   code : String
   message : String
   path : String
-  line : Int
+  line : Int32
 } derive(Eq, @debug.Debug)
 pub fn ConfigError::equal(Self, Self) -> Bool
 pub fn ConfigError::not_equal(Self, Self) -> Bool
@@ -118,12 +120,12 @@ pub(all) struct ContextAudit {
   findings : Array[AuditFinding]
   blocking : Bool
 } derive(Eq, @debug.Debug)
-pub fn ContextAudit::critical_count(Self) -> Int
+pub fn ContextAudit::critical_count(Self) -> Int32
 pub fn ContextAudit::equal(Self, Self) -> Bool
-pub fn ContextAudit::info_count(Self) -> Int
+pub fn ContextAudit::info_count(Self) -> Int32
 pub fn ContextAudit::not_equal(Self, Self) -> Bool
 pub fn ContextAudit::to_repr(Self) -> @debug.Repr
-pub fn ContextAudit::warning_count(Self) -> Int
+pub fn ContextAudit::warning_count(Self) -> Int32
 
 pub(all) struct Diagnostic {
   code : String
@@ -147,16 +149,16 @@ pub fn IncludeEdge::not_equal(Self, Self) -> Bool
 pub fn IncludeEdge::to_repr(Self) -> @debug.Repr
 
 pub(all) struct Limits {
-  max_sources : Int
-  max_total_chars : Int
-  max_source_chars : Int
-  max_include_depth : Int
-  max_include_expansions : Int
-  max_context_depth : Int
-  max_directives : Int
-  max_contexts : Int
-  max_rules : Int
-  max_audit_pairs : Int
+  max_sources : Int32
+  max_total_chars : Int32
+  max_source_chars : Int32
+  max_include_depth : Int32
+  max_include_expansions : Int32
+  max_context_depth : Int32
+  max_directives : Int32
+  max_contexts : Int32
+  max_rules : Int32
+  max_audit_pairs : Int32
 } derive(Eq, @debug.Debug)
 pub fn Limits::default() -> Self
 pub fn Limits::equal(Self, Self) -> Bool
@@ -183,7 +185,7 @@ pub fn SourceFile::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SourceLocation {
   path : String
-  line : Int
+  line : Int32
   include_chain : Array[String]
 } derive(Eq, @debug.Debug)
 pub fn SourceLocation::equal(Self, Self) -> Bool

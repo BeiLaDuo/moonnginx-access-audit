@@ -2,4 +2,9 @@ import {
   "BeiLaDuo/moonnginx-access-audit" @cidr,
   "LuoYunxin1/moonnginx" @ngx,
   "moonbitlang/core/debug",
+  "moonbitlang/core/encoding/utf8",
 }
+
+import {
+  "moonbitlang/core/json",
+} for "wbtest"

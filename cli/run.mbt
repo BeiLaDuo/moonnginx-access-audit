@@ -21,7 +21,7 @@ pub fn help_text() -> String {
     #|
     #|Options:
     #|  --root DIRECTORY     Local input root, default '.'
-    #|  --format FORMAT      text, json, or markdown; default text
+    #|  --format FORMAT      text, json, markdown, or sarif (audit only); default text
     #|  --context ID         Exact selector from the contexts command
     #|  --strict             Audit also fails on warnings
     #|  --limits NAME=VALUE,...   Override positive integer resource limits
@@ -116,9 +116,16 @@ pub fn run(options : Options, sources : Array[@nginx.SourceFile]) -> CliResult {
   }
   if options.format != "text" &&
     options.format != "json" &&
-    options.format != "markdown" {
+    options.format != "markdown" &&
+    options.format != "sarif" {
     return cli_failure(
       argument_error("invalid_format", "format must be text, json, or markdown"),
+      "text",
+    )
+  }
+  if options.format == "sarif" && options.command != Audit {
+    return cli_failure(
+      argument_error("invalid_format", "SARIF is available only for audit"),
       "text",
     )
   }
@@ -160,6 +167,12 @@ pub fn run(options : Options, sources : Array[@nginx.SourceFile]) -> CliResult {
     }
   }
   if analysis.has_blocking() {
+    if options.format == "sarif" {
+      return complete(
+        3,
+        @nginx.render_sarif(analysis, [], selector=options.context_selector),
+      )
+    }
     let output = if options.command == Contexts {
       @nginx.render_contexts(analysis, options.format)
     } else {

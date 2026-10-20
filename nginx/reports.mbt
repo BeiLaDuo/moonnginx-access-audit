@@ -382,6 +382,9 @@ pub fn render_audits(
   format : String,
   selector : String?,
 ) -> String {
+  if format == "sarif" {
+    return render_sarif(analysis, audits, selector~)
+  }
   if format == "json" {
     let value = analysis_json(analysis, selector)
     if value is Object(map) {
