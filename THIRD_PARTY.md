@@ -9,7 +9,7 @@
 ## Behavioral references and test tools
 
 - Nginx HTTP access module documentation and implementation: https://nginx.org/en/docs/http/ngx_http_access_module.html and https://github.com/nginx/nginx. Behavior was independently implemented; Nginx source code and its fixtures were not copied into the analysis library.
-- Official Nginx Windows 1.30.5 was downloaded from https://nginx.org/download/nginx-1.30.5.zip for the local interoperability test. The executable is not redistributed. Test configurations and static content in `tests/integration-nginx/` were written for this project.
+- Official Nginx Windows 1.30.5 was used for the first delivery; 1.30.6 from https://nginx.org/download/nginx-1.30.6.zip was used for the 2026-10-20 local interoperability test. The executable is not redistributed. Test configurations and static content in `tests/integration-nginx/` were written for this project.
 - Python standard library is used by the test and measurement tools. No third-party Python dependency is needed.
 
 The project keeps Apache-2.0. Preserve third-party notices when distributing compiled outputs. Dependencies, generated outputs and test fixtures are not counted as new MoonBit implementation work.

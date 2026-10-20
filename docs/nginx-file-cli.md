@@ -6,13 +6,13 @@
 
 需要 Node.js 22.13 或更新版本。交付包自带 `dist/moonnginx-access-audit.js`，因此可直接运行：
 
-```powershell
+```bat
 node tools/moonnginx-access-audit.mjs contexts nginx.conf --root examples/nginx/files --format json
 ```
 
 从报告找到 `/health` 对应的 `selector`，然后指定该值查询地址。比如该示例使用：
 
-```powershell
+```bat
 node tools/moonnginx-access-audit.mjs probe nginx.conf 127.0.0.1 --root examples/nginx/files --context "http[1]/server[1]/location[2]" --format json
 node tools/moonnginx-access-audit.mjs audit nginx.conf --root examples/nginx/files --format markdown
 node tools/moonnginx-access-audit.mjs validate nginx.conf --root examples/nginx/files --format json
@@ -22,7 +22,7 @@ node tools/moonnginx-access-audit.mjs validate nginx.conf --root examples/nginx/
 
 如需从源码构建，先安装 MoonBit，再运行：
 
-```powershell
+```bat
 moon update
 moon build cmd/nginx-cli --target js --release --deny-warn
 node tools/moonnginx-access-audit.mjs help
@@ -34,7 +34,7 @@ CLI 优先使用 `_build` 中的 release 构建，其次使用 debug 构建，�
 
 ## 报告与退出码
 
-报告格式支持 `text`、`json`、`markdown`。JSON 使用 `schema_version: 1`，包含范围说明、结构上下文、来源文件/行号、include 链和诊断。失败报告的错误字段位于 `error.code`。
+报告格式支持 `text`、`json`、`markdown`；`audit` 额外支持 `--format sarif`，详见 [SARIF 用法](sarif.md)。SARIF 保留门禁退出码、文件/行号和 include 来源；未支持的分析标记为失败运行，不输出成功发现。JSON 使用 `schema_version: 1`，包含范围说明、结构上下文、来源文件/行号、include 链和诊断。失败报告的错误字段位于 `error.code`。
 
 参数错误也遵循明确指定的 `--format`，写入 stderr，stdout 保持为空；未指定或无法辨认的格式回退到 text。`--` 后的字面文件名不会被误当作格式选项。
 
@@ -66,13 +66,13 @@ probe 的 IPv4 参数在读取配置前校验。错误地址始终报告 `invali
 
 默认：64 个源文件，合计 1,048,576 个 UTF-16 字符，单源 262,144 字符，include 深度 16、展开 256，配置深度 32、节点 20,000、上下文 2,048、规则 4,096、审计工作 1,000,000。目录扫描使用节点预算并缓存目录列表。报告也使用 `max_directives` 限制展开后的规则、诊断及关联规则条目，防止大量子级继承同一列表时产生巨大的 JSON；超限时返回 4。
 
-```powershell
+```bat
 node tools/moonnginx-access-audit.mjs audit nginx.conf --root examples/nginx/files --limits max_sources=32,max_include_depth=8 --format json
 ```
 
 真实文件回归无需 Nginx：
 
-```powershell
+```bat
 python tools/verify_files.py --output _build/ci/file-workflow.json
 ```
 
@@ -80,11 +80,11 @@ python tools/verify_files.py --output _build/ci/file-workflow.json
 
 真实服务对照需要另外安装 Nginx；脚本只创建自己的临时服务与静态文件，并在结束时关闭它：
 
-```powershell
+```bat
 python tools/verify_nginx.py --nginx C:/tools/nginx/nginx.exe --cli-command-json '["node","tools/moonnginx-access-audit.mjs"]' --output _build/ci/nginx-comparison.json
 ```
 
-本机交付验证使用 MoonBit 0.10.15、Node.js 24.19.0 和官方 Nginx Windows 1.30.5。文件 CLI 的已验证运行方式为 Node.js；纯库在本地测试 JavaScript、Wasm、Wasm GC。Windows 缺少 MSVC/Windows SDK，未执行 Windows native 二进制构建与测试。
+2026-10-13 交付验证使用 MoonBit 0.10.15、Node.js 24.19.0 和 Nginx Windows 1.30.5；2026-10-20 续开发使用 MoonBit 0.10.16 与 Nginx Windows 1.30.6 重新验证，详见 local-validation.md。文件 CLI 的已验证运行方式为 Node.js；纯库在本地测试 JavaScript、Wasm、Wasm GC。Windows 缺少 MSVC/Windows SDK，未执行 Windows native 二进制构建与测试。
 
 当前提交的 Ubuntu 四目标验证见[本仓库 CI](https://github.com/BeiLaDuo/moonnginx-access-audit/actions/workflows/ci.yml)。
 

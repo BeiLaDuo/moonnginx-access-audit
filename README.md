@@ -1,191 +1,146 @@
 # MoonNginx Access Audit
 
-Repository: https://github.com/BeiLaDuo/moonnginx-access-audit. Module: `BeiLaDuo/moonnginx-access-audit`.
-Participant and new Git author: 高本乾 <3346147448@qq.com>.
+Offline Nginx HTTP IPv4 access-rule analysis, implemented primarily in MoonBit.
+Use it to review configuration changes before deployment, explain a rule's
+origin, and gate a CI pipeline on unsafe or unsupported input.
 
-This repository was created as BeiLaDuo/beiladuo with two commits. Those
-commits are preserved; fourteen substantive updates follow the uploaded source.
-See [repository migration](docs/repository-migration.md).
+[中文使用说明](docs/nginx-file-cli.md) · [SARIF integration](docs/sarif.md) ·
+[Acceptance checklist](docs/acceptance-2026-10.md) · [Third-party sources](THIRD_PARTY.md)
 
-## October 2026 development: real Nginx configuration audit
+Repository: https://github.com/BeiLaDuo/moonnginx-access-audit  
+MoonBit module: `BeiLaDuo/moonnginx-access-audit`  
+Participant and new Git author: 高本乾 · 3346147448@qq.com
 
-The 0.2.0 development update adds a MoonBit HTTP IPv4 access-rule adapter and a
-real-file CLI. It understands configuration contexts, inherited rule lists,
-offline includes, source locations, explicit resource budgets and three-way
-address outcomes. It reuses `LuoYunxin1/moonnginx@0.2.0` as its parser.
+## Run without building
 
-Read the [Chinese file CLI guide](docs/nginx-file-cli.md) or run:
+Install Node.js 22.13 or newer. From this repository, run these commands in CMD:
 
-```powershell
+```bat
+node tools\moonnginx-access-audit.mjs contexts nginx.conf --root examples/nginx/files --format json
+node tools\moonnginx-access-audit.mjs probe nginx.conf 127.0.0.1 --root examples/nginx/files --context "http[1]/server[1]/location[2]" --format json
+node tools\moonnginx-access-audit.mjs audit examples/ci/safe.conf --format json
+```
+
+The launcher uses a local release build first, then a debug build, then the
+shipped `dist/moonnginx-access-audit.js`. A source archive can run the shipped
+CLI without a MoonBit installation. Build first when modifying MoonBit code.
+
+To generate a report for code review:
+
+```bat
+node tools\moonnginx-access-audit.mjs audit examples/ci/risky.conf --format sarif > nginx.sarif
+echo %ERRORLEVEL%
+```
+
+The risky example returns **1**, with a complete SARIF report. It does not
+upload anything to GitHub. See [SARIF instructions](docs/sarif.md) for source
+paths, selectors, severity mapping and unsuccessful analyses.
+
+## What it models
+
+- Ordered `allow`/`deny` rules in HTTP, server and nested location contexts.
+- Whole-list inheritance: any local access rule replaces the parent's list.
+- First-match decisions, unreachable rules, broad allows, duplicate rules,
+  CIDR normalization and unrestricted fallbacks.
+- Confined offline includes with source files, line numbers and include chains.
+- Input, include expansion, audit-work and expanded-report resource budgets.
+- Text, JSON and Markdown reports; SARIF 2.1.0 for the `audit` command.
+
+The parser is the existing Apache-2.0 `LuoYunxin1/moonnginx@0.2.0` package.
+The include semantics, access analysis, reports, file CLI and tests are this
+project's extension. Core CIDR functionality comes from the original
+MoonCIDR Audit base; see [provenance](docs/repository-migration.md).
+
+## Commands and exit status
+
+| Command | Purpose |
+|---|---|
+| `contexts CONFIG` | List structural selectors and effective rule origins |
+| `audit CONFIG` | Produce findings and apply a release gate |
+| `probe CONFIG IP --context ID` | Explain one IPv4 address decision |
+| `validate CONFIG` | Check the supported configuration and its dependencies |
+
+Use `COMMAND --help` without preparing a configuration. `--strict` makes audit
+warnings fail the gate. Put `--` before literal filenames beginning with `-`.
+
+| Status | Meaning |
+|---:|---|
+| 0 | Completed within the declared scope |
+| 1 | Audit gate rejected critical findings, or warnings in strict mode |
+| 2 | Invalid argument, file, encoding, syntax or include input |
+| 3 | Unsupported or incomplete analysis |
+| 4 | Resource budget exhausted |
+
+A probe reports `allowed_by_rule`, `denied_by_rule`, or
+`no_address_restriction`. These describe the address module, **not full request
+authorization**. A denied address still counts as a successfully completed probe.
+
+`CONFIG` is relative to `--root` (default `.`). Relative includes are anchored
+to the main configuration's directory and must stay within that directory or
+its children. Filename `*`/`?` masks are supported; absolute includes, parent
+traversal, linked input roots, symlinks and junctions are rejected.
+
+## MoonBit library and development
+
+The pure library opens no files, starts no processes and uses no network.
+The `fileio` and `cmd/nginx-cli` packages provide the separate Node.js boundary.
+Run the included MoonBit consumer example:
+
+```bat
 moon update
-moon build cmd/nginx-cli --target js --release --deny-warn
-node tools/moonnginx-access-audit.mjs contexts nginx.conf --root examples/nginx/files --format json
 moon run examples/nginx --target wasm-gc
 ```
 
-The delivery archive includes a precompiled `dist/moonnginx-access-audit.js` for Node.js
-22.13 or newer. The pure analysis library has no filesystem or network side
-effects. A file CLI probe does not claim complete Nginx authorization, and
-unsupported access-relevant semantics block successful analysis.
+The analysis API is in `nginx/pkg.generated.mbti`, including
+`analyze_nginx_sources`, `Analysis::audits`, `AccessContext::probe` and
+`render_sarif`. The original IPv4/CIDR APIs remain in the root package.
+This module has not yet been published to Mooncakes; building this checkout
+fetches the existing parser dependency, not a published copy of this module.
 
-See [scope and baseline](docs/october-scope.md), [third-party notices](THIRD_PARTY.md),
-and [validation](docs/local-validation.md). The original MoonCIDR Audit base was published as
-`BeiLaDuo/cidr-audit@0.1.2`. This renamed module has not been published. Competition registration, remote releases and Mooncakes
-publication remain separate user actions.
+Build and verify with MoonBit and Python 3.10+:
 
-The update also supports literal dash-prefixed filenames, structured argument
-errors, early IPv4 validation and rejection of linked input roots. CI compares
-the shipped CLI with fresh builds on real file workflows. Try the runnable
-[CI audit example](docs/ci-audit-example.md), which demonstrates safe, warning,
-risky and unsupported configurations, or review the
-[development record](docs/development-record.md) for this round's changes.
-
-MoonNginx Access Audit is a pure MoonBit library for auditing ordered IPv4/CIDR allow
-and deny rules. It helps gateway, reverse proxy, cloud security group, and
-operations configuration authors find rule shadowing, dangerous wide ranges,
-non-canonical CIDR input, duplicate rules, and risky special address spaces.
-
-The project is intentionally small in scope: it does not try to be a firewall,
-packet filter, or network daemon. It focuses on the reusable analysis layer that
-other MoonBit tools can build on.
-
-## Features
-
-- Parse IPv4 addresses and CIDR blocks without external dependencies.
-- Normalize CIDR blocks such as `192.168.1.99/24` to `192.168.1.0/24`.
-- Evaluate ordered `allow` and `deny` rules.
-- Detect duplicate rules, shadowed rules, conflicting overlaps, redundant
-  overlaps, global deny rules, and very wide allow rules.
-- Classify private, loopback, link-local, multicast, unspecified, and broadcast
-  address ranges.
-- Provide strict, gateway, and quiet audit policies.
-- Produce plain text, Markdown table, and JSON-like reports.
-- Explain why a probe IP matches a rule.
-- Compare two rule sets and summarize risky changes.
-- Produce remediation hints for common findings.
-- Merge overlapping or adjacent address ranges and find coverage holes.
-- Deduplicate contained CIDRs and recursively aggregate sibling networks.
-- Import native rules, Nginx `allow`/`deny` directives, and CSV rule lists.
-- Apply configurable CI deployment gates to audit reports.
-
-## Quick Start
-
-Run the main demo:
-
-```powershell
-moon run ./cmd/main
+```bat
+moon info
+moon fmt --check
+moon check --target all --deny-warn
+moon build
+moon test --target js --deny-warn
+moon test --target wasm --deny-warn
+moon test --target wasm-gc --deny-warn
+moon build cmd/nginx-cli --target js --release --deny-warn
+python tools\verify_files.py
+python tools\verify_distribution.py
+python tools\verify_ci_examples.py
+python tools\verify_sarif.py
+moon package --list
+python tools\verify_repository.py --check-package
 ```
 
-Run example scenarios:
+When changing the CLI, refresh `dist/moonnginx-access-audit.js` from the release
+build before running distribution tests. Real Nginx comparison requires an
+external Nginx binary; see the [Chinese guide](docs/nginx-file-cli.md).
+CI adds Linux native build/tests. Windows native compilation needs its own C
+toolchain and is not claimed by the local Windows verification.
 
-```powershell
-moon run ./examples/gateway
-moon run ./examples/cloud
-```
+## Boundaries and maintenance
 
-The main demo now walks through auditing, probe decisions, detailed
-explanations, a release gate, coverage holes, CIDR aggregation, and Nginx
-configuration import.
+This is a focused offline audit tool. It does not infer URL-to-location routing,
+model IPv6 or combined authentication, configure a server, enforce traffic,
+or prove that an entire Nginx deployment is secure. Unsupported access-relevant
+semantics block successful analysis. Keep these boundaries when interpreting
+reports or extending the API.
 
-Run checks:
-
-```powershell
-moon update
-moon check
-moon build --target all
-moon test --target all --deny-warn
-```
-
-## Basic Usage
-
-```moonbit
-let ruleset = @cidr.parse_rules([
-  "allow 10.0.0.0/8 internal network",
-  "deny 10.1.2.0/24 blocked subnet",
-  "allow 192.168.1.99/24 host bits will be normalized",
-  "deny 0.0.0.0/0 default deny",
-])
-
-let report = ruleset.audit()
-println(report.text_report())
-
-let ip = @cidr.IPv4::parse("10.1.2.9").unwrap()
-println(ruleset.decide(ip).summary())
-```
-
-## Example Findings
-
-MoonNginx Access Audit can report findings like:
-
-```text
-[critical] too_wide_allow R1: allow rule covers a very wide network: 10.0.0.0/8
-[critical] shadowed_rule R2 related=R1: rule is already covered by earlier allow rule R1
-[info] non_canonical_cidr R3: input 192.168.1.99/24 was normalized to 192.168.1.0/24
-[critical] global_deny R4: deny rule blocks the entire IPv4 space
-```
-
-## API Overview
-
-Important types:
-
-- `IPv4`: parsed IPv4 address stored as `UInt`.
-- `CidrBlock`: normalized IPv4 CIDR block.
-- `RuleAction`: `Allow` or `Deny`.
-- `Rule`: ordered rule with id, action, block, source block, and note.
-- `RuleSet`: parsed rule collection with decision and audit helpers.
-- `AuditPolicy`: strict, gateway, and quiet policy presets.
-- `AuditReport`: findings, severity counts, risk score, and report rendering.
-- `DiffReport`: change report between two rule sets.
-- `FixHint`: remediation suggestion generated from an audit finding.
-- `AddressRange`: closed IPv4 interval used by coverage analysis.
-- `AggregationReport`: CIDR deduplication and sibling merge result.
-- `ImportReport`: structured native, Nginx, or CSV import result.
-- `GatePolicy` and `GateResult`: configurable CI release decision.
-
-Common functions:
-
-- `IPv4::parse`
-- `CidrBlock::parse`
-- `Rule::parse`
-- `parse_rules`
-- `RuleSet::audit`
-- `RuleSet::audit_with_policy`
-- `RuleSet::decide`
-- `RuleSet::explain_ip`
-- `RuleSet::diff_from`
-- `RuleSet::coverage_ranges`
-- `RuleSet::coverage_report`
-- `aggregate_cidr_strings`
-- `import_nginx_access`
-- `import_csv_rules`
-- `AuditReport::evaluate_gate`
-- `AuditReport::text_report`
-- `AuditReport::json_report`
-- `AuditReport::hint_report`
-
-## Project Boundary
-
-MoonNginx Access Audit currently focuses on IPv4 and ordered CIDR rules. It does not
-implement IPv6, kernel integration, packet capture, live network access, or
-cloud-provider credentials. Its importers are intentionally offline and
-limited to reviewable text formats. Provider-specific adapters can be added
-later without changing the core audit model.
-
-## Hackathon Value
-
-MoonBit already has examples and packages around networking, URLs, sockets, and
-general parsing. MoonNginx Access Audit targets a different gap: auditing network rule
-sets before they are deployed. This is useful for configuration review, CI
-checks, teaching network rule behavior, and building safer MoonBit developer
-tools.
-
-## Submission Materials
-
-- One-page application: `docs/submission-application-one-page.md`
-- Full application notes: `docs/submission-application.md`
-- Novelty review: `docs/novelty-review.md`
-- Submission checklist: `docs/submission-checklist.md`
+[Development record](docs/development-record.md),
+[validation evidence](docs/local-validation.md),
+[contribution guide](CONTRIBUTING.md), and [security policy](SECURITY.md)
+describe reproducible work and follow-up changes. Report ordinary defects
+with a minimal sanitized configuration; follow the security policy for
+sensitive cases.
 
 ## License
 
-Apache-2.0.
+[Apache-2.0](LICENSE). Redistribute the project [NOTICE](NOTICE),
+[third-party inventory](third_party/manifest.json), and retained upstream
+license/NOTICE files together with source or compiled deliveries.
+Competition submission, Mooncakes publication and GitHub releases are separate
+actions; this repository's development records do not imply they have occurred.

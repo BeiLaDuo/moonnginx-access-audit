@@ -2,7 +2,7 @@
 
 ## 基本信息
 
-项目名称：MoonNginx Access Audit：MoonBit Nginx 访问规则审计与文件 CLI  
+项目名称：MoonNginx Access Audit  
 参赛者：高本乾  
 联系方式：3346147448@qq.com  
 GitHub 仓库链接：https://github.com/BeiLaDuo/moonnginx-access-audit  
@@ -11,24 +11,23 @@ GitHub 仓库链接：https://github.com/BeiLaDuo/moonnginx-access-audit
 
 ## 项目简介
 
-MoonNginx Access Audit 面向网关、反向代理维护者和 CI 工具开发者，提供离线发布前审计能力。基线 v0.1.2 已有 IPv4/CIDR 审计；本轮新增实际 Nginx 配置的上下文、规则继承、文件 CLI 和真实服务对照验证，定位无效规则、危险放行及导入错误。核心使用 MoonBit，文件 CLI 在 Node.js 运行，原有 API 保留。
+面向网关、反向代理维护者及 CI 工具开发者，使用 MoonBit 分析实际 Nginx HTTP IPv4 访问规则、上下文及继承，定位危险放行、不可达规则与导入错误。已有 CIDR 基础单独说明；本期新增文件 CLI、来源追踪、资源预算及 SARIF 报告，用于发布前评审和代码扫描工具集成。
 
 ## 核心功能范围
 
-- 提供 http/server/location 的有序 IPv4 规则审计、继承分析和来源文件/行号；
-- 展开主配置目录下的离线 include，检查缺失、循环、编码、路径及资源预算；
-- 提供 contexts/audit/probe/validate 文件命令、三态地址结果、JSON/Markdown 报告与 CI 退出码；
-- 有效 MoonBit 实现 5,471 行，排除测试、示例、依赖、嵌入 JavaScript 和兼容声明；
-- 162 项测试在本地三个目标全通过；Ubuntu 四目标由当前仓库 CI 验证；真实 Nginx 12 个 HTTP 场景对照通过；本地文件工作流 29 项通过、1 项因权限跳过；交付脚本与新构建一致；
-- 提供 README、消费示例、可执行 CI 门禁演示和新增 14 次实质提交（含原有 2 次，共 16 次）。首版不覆盖完整路由、IPv6及组合鉴权；关键未支持语义明确阻塞。Windows native 构建未验证。
+- 提供 http/server/location 有序规则审计、整表继承及原始文件/行号；
+- 展开受限目录内的离线 include，检查缺失、循环、编码、路径及资源预算；
+- 提供 contexts/audit/probe/validate、三态地址结果、JSON/Markdown 报告及 CI 退出码；audit 增加 SARIF 2.1.0，保留来源和失败运行标记；
+- 有效 MoonBit 实现 5,641 行；本地三目标各 167 项测试通过；真实 Nginx 12 个 HTTP 场景、SARIF 十个实际场景及交付脚本对照通过；
+- 提供 README、CMD 用法、示例、CI、来源及许可证检查和连续实质提交。首版不覆盖完整路由、IPv6 及组合鉴权，关键未支持语义明确阻塞。Windows native 二进制未在本地验证，远端结果以对应提交 Actions 为准。
 
 ## 移植或参考说明
 
 既有项目名称：MoonCIDR Audit（v0.1.2 基础）  
 既有项目链接：https://github.com/BeiLaDuo/mooncidr-audit/tree/414e476efa463737164e5d5e1b2345bccd01148f  
 既有项目许可证：Apache-2.0  
-参考/复用项目：moonnginx，https://github.com/LuoYunxin1/moonnginx，Apache-2.0  
-语义依据：Nginx ngx_http_access_module 官方文档，https://nginx.org/en/docs/http/ngx_http_access_module.html  
-本项目许可证：Apache-2.0
+复用项目：moonnginx，https://github.com/LuoYunxin1/moonnginx，Apache-2.0  
+语义参考：Nginx ngx_http_access_module 官方文档，https://nginx.org/en/docs/http/ngx_http_access_module.html  
+本项目许可证：Apache-2.0；保留依赖及标准库的原始 LICENSE/NOTICE。
 
-本轮成果为 v0.2.0；尚未报名或发布 Mooncakes 新版。保留依赖许可与来源，不将基线功能或上游解析器计为本轮新增贡献。
+本轮不将旧基础或上游解析器计为新贡献。代码已准备持续同步 GitHub；报名、验收提交及 Mooncakes 发布由用户后续处理。

@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased — 2026-10-20 continuation
+
+- Add a MoonBit SARIF 2.1.0 exporter for existing Nginx audit findings, with
+  source files/lines, include chains, stable rule descriptors and UTF-8 URIs.
+- Preserve gate exit codes and mark unsupported analyses as unsuccessful;
+  disallow SARIF for commands that do not produce audit findings.
+- Add real-file JSON/SARIF equivalence and fresh-build/distribution checks.
+- Retain the complete core NOTICE and reviewed dependency legal materials;
+  verify their inventory, hashes and inclusion in actual source packages.
+- Refresh interfaces with MoonBit 0.10.16 and document CMD operation, scope,
+  contribution requirements and the official October acceptance criteria.
+
 ## 0.2.0 — October 2026 development
 
 - Reuse moonnginx 0.2.0 for bounded parsing of actual configuration sources.
