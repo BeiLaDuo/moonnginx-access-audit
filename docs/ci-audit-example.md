@@ -13,9 +13,9 @@
 
 风险配置和未支持配置的演示任务会按预期显示失败。`audit.json` 保存分析结果；输入错误写入 `diagnostics.json`。这只演示 IPv4 地址规则门禁，不表示完整 HTTP 请求已通过鉴权。
 
-本地执行同一示例：
+在 CMD 中执行同一示例：
 
-```powershell
+```bat
 node tools/moonnginx-access-audit.mjs audit safe.conf --root examples/ci --format json
 node tools/moonnginx-access-audit.mjs audit warning.conf --root examples/ci --strict --format json
 python tools/verify_ci_examples.py

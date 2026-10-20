@@ -81,8 +81,11 @@ python tools/verify_files.py --output _build/ci/file-workflow.json
 真实服务对照需要另外安装 Nginx；脚本只创建自己的临时服务与静态文件，并在结束时关闭它：
 
 ```bat
-python tools/verify_nginx.py --nginx C:/tools/nginx/nginx.exe --cli-command-json '["node","tools/moonnginx-access-audit.mjs"]' --output _build/ci/nginx-comparison.json
+python tools/verify_nginx.py --nginx C:/tools/nginx/nginx.exe --cli-command-json "[\"node\",\"tools/moonnginx-access-audit.mjs\"]" --output _build/ci/nginx-comparison.json
 ```
+
+以上是 CMD 写法，JSON 外层使用双引号，内部双引号使用 `\"`；不要换成单引号。
+请把 Nginx 路径替换为本机实际安装位置；路径有空格时，用双引号包住整个路径。
 
 2026-10-13 交付验证使用 MoonBit 0.10.15、Node.js 24.19.0 和 Nginx Windows 1.30.5；2026-10-20 续开发使用 MoonBit 0.10.16 与 Nginx Windows 1.30.6 重新验证，详见 local-validation.md。文件 CLI 的已验证运行方式为 Node.js；纯库在本地测试 JavaScript、Wasm、Wasm GC。Windows 缺少 MSVC/Windows SDK，未执行 Windows native 二进制构建与测试。
 

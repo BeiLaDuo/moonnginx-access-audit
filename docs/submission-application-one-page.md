@@ -30,4 +30,4 @@ GitHub 仓库链接：https://github.com/BeiLaDuo/moonnginx-access-audit
 语义参考：Nginx ngx_http_access_module 官方文档，https://nginx.org/en/docs/http/ngx_http_access_module.html  
 本项目许可证：Apache-2.0；保留依赖及标准库的原始 LICENSE/NOTICE。
 
-本轮不将旧基础或上游解析器计为新贡献。代码已准备持续同步 GitHub；报名、验收提交及 Mooncakes 发布由用户后续处理。
+本轮不将旧基础或上游解析器计为新贡献。代码已公开同步 GitHub；报名、验收提交及 Mooncakes 发布尚未代办，正式章程额外条件仍待核实。

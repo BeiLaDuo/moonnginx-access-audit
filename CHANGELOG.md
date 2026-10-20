@@ -11,6 +11,8 @@
   verify their inventory, hashes and inclusion in actual source packages.
 - Refresh interfaces with MoonBit 0.10.16 and document CMD operation, scope,
   contribution requirements and the official October acceptance criteria.
+- Correct the real-Nginx verification command's JSON quoting for Windows CMD;
+  keep unverified Mooncakes publication and charter dates explicit in the checklist.
 
 ## 0.2.0 — October 2026 development
 
