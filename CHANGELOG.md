@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — 2026-10-20 continuation
+## Unreleased — October 2026 continuation
 
 - Add a MoonBit SARIF 2.1.0 exporter for existing Nginx audit findings, with
   source files/lines, include chains, stable rule descriptors and UTF-8 URIs.
@@ -13,6 +13,8 @@
   contribution requirements and the official October acceptance criteria.
 - Correct the real-Nginx verification command's JSON quoting for Windows CMD;
   keep unverified Mooncakes publication and charter dates explicit in the checklist.
+- Record the October 21 skill-based acceptance review; correct the old base
+  project's name and distinguish the optional PDF helper's Pillow/font dependencies.
 
 ## 0.2.0 — October 2026 development
 

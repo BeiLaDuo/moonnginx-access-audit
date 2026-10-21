@@ -10,7 +10,7 @@
 
 - Nginx HTTP access module documentation and implementation: https://nginx.org/en/docs/http/ngx_http_access_module.html and https://github.com/nginx/nginx. Behavior was independently implemented; Nginx source code and its fixtures were not copied into the analysis library.
 - Official Nginx Windows 1.30.5 was used for the first delivery; 1.30.6 from https://nginx.org/download/nginx-1.30.6.zip was used for the 2026-10-20 local interoperability test. The executable is not redistributed. Test configurations and static content in `tests/integration-nginx/` were written for this project.
-- Python standard library is used by the test and measurement tools. No third-party Python dependency is needed.
+- Verification and measurement scripts use Python's standard library. The optional `tools/render_submission_pdf.py` helper uses Pillow (`PIL`) and locally installed Noto Sans SC fonts; these are not redistributed. That helper is separate from the Markdown application, CLI, build and verification workflows.
 
 The project keeps Apache-2.0. Preserve third-party notices when distributing compiled outputs. Dependencies, generated outputs and test fixtures are not counted as new MoonBit implementation work.
 
@@ -33,4 +33,4 @@ license/NOTICE and manifest rather than silently redistributing stale texts.
 SARIF behavior follows the public GitHub documentation and SARIF 2.1.0 format.
 No CodeQL implementation or SARIF schema is redistributed. The independent
 local format validator is a development tool outside the source package;
-project verification scripts otherwise use Python's standard library only.
+project verification scripts otherwise use Python's standard library only. The optional PDF helper described above is not part of those verification scripts.
