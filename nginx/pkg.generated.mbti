@@ -12,6 +12,10 @@ pub fn analyze_nginx_sources(String, Array[SourceFile], limits? : Limits) -> Res
 
 pub fn check_report_budget(Analysis, String?, Int32, audits? : Array[ContextAudit]) -> Result[Unit, ConfigError]
 
+pub fn compare_access(Analysis, Analysis, RequestTarget, scope? : String, max_work? : Int32, max_changes? : Int32) -> Result[AccessComparison, ConfigError]
+
+pub fn expect_access(Analysis, RequestTarget, String, Bool, max_work? : Int32, max_changes? : Int32) -> Result[AccessComparison, ConfigError]
+
 pub fn include_path_matches(String, String) -> Bool
 
 pub fn normalize_source_path(String) -> Result[String, ConfigError]
@@ -35,6 +39,34 @@ pub fn resolve_include_path(String, String) -> Result[String, ConfigError]
 // Errors
 
 // Types and methods
+pub(all) struct AccessChange {
+  first : String
+  last : String
+  address_count : String
+  newly_allowed : Bool
+  before : ProbeResult
+  after : ProbeResult
+} derive(Eq, @debug.Debug)
+pub fn AccessChange::equal(Self, Self) -> Bool
+pub fn AccessChange::not_equal(Self, Self) -> Bool
+pub fn AccessChange::to_repr(Self) -> @debug.Repr
+
+pub(all) struct AccessComparison {
+  target : RequestTarget
+  scope : String
+  before_context : AccessContext
+  after_context : AccessContext
+  changes : Array[AccessChange]
+  newly_allowed_count : String
+  newly_denied_count : String
+  compared_addresses : String
+} derive(Eq, @debug.Debug)
+pub fn AccessComparison::equal(Self, Self) -> Bool
+pub fn AccessComparison::not_equal(Self, Self) -> Bool
+pub fn AccessComparison::render(Self, String) -> String
+pub fn AccessComparison::to_json(Self) -> Json
+pub fn AccessComparison::to_repr(Self) -> @debug.Repr
+
 pub(all) struct AccessContext {
   selector : String
   kind : String
@@ -46,6 +78,7 @@ pub(all) struct AccessContext {
   rules : Array[AccessRule]
   diagnostics : Array[Diagnostic]
   audit_pair_budget : Int32
+  routing : Array[RoutingDirective]
 } derive(Eq, @debug.Debug)
 pub fn AccessContext::audit(Self) -> Result[ContextAudit, ConfigError]
 pub fn AccessContext::equal(Self, Self) -> Bool
@@ -89,6 +122,7 @@ pub fn Analysis::context(Self, String) -> Result[AccessContext, ConfigError]
 pub fn Analysis::equal(Self, Self) -> Bool
 pub fn Analysis::has_blocking(Self) -> Bool
 pub fn Analysis::not_equal(Self, Self) -> Bool
+pub fn Analysis::resolve(Self, RequestTarget) -> Result[AccessContext, ConfigError]
 pub fn Analysis::to_repr(Self) -> @debug.Repr
 
 pub(all) struct AuditFinding {
@@ -174,6 +208,26 @@ pub(all) struct ProbeResult {
 pub fn ProbeResult::equal(Self, Self) -> Bool
 pub fn ProbeResult::not_equal(Self, Self) -> Bool
 pub fn ProbeResult::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RequestTarget {
+  host : String
+  uri : String
+  port : Int32
+  local_address : String
+} derive(Eq, @debug.Debug)
+pub fn RequestTarget::equal(Self, Self) -> Bool
+pub fn RequestTarget::not_equal(Self, Self) -> Bool
+pub fn RequestTarget::to_repr(Self) -> @debug.Repr
+pub fn RequestTarget::validate(Self) -> Result[Unit, ConfigError]
+
+pub(all) struct RoutingDirective {
+  name : String
+  args : Array[String]
+  source : SourceLocation
+} derive(Eq, @debug.Debug)
+pub fn RoutingDirective::equal(Self, Self) -> Bool
+pub fn RoutingDirective::not_equal(Self, Self) -> Bool
+pub fn RoutingDirective::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SourceFile {
   path : String

@@ -1,8 +1,17 @@
 # MoonNginx Access Audit
 
-Offline Nginx HTTP IPv4 access-rule analysis, implemented primarily in MoonBit.
-Use it to review configuration changes before deployment, explain a rule's
-origin, and gate a CI pipeline on unsafe or unsupported input.
+Find unintended access changes between real Nginx configuration snapshots.
+The request router and exact IPv4 comparison engine are implemented in MoonBit.
+
+`nginx -t` checks configuration syntax and referenced files. A valid edit can
+still expose an admin path: adding one child `deny` replaces the entire
+inherited allow-list. This tool compares the resulting address decisions for
+a specified host, listener and URI, reports newly allowed/denied intervals,
+and fails CI when the change violates an explicit gate.
+
+[Regression workflow and supported profile](docs/request-regression.md) ·
+[Revised proposal](docs/submission-application-one-page.md) ·
+[Latest local review](docs/final-review-2026-10-22.md)
 
 [中文使用说明](docs/nginx-file-cli.md) · [SARIF integration](docs/sarif.md) ·
 [Acceptance checklist](docs/acceptance-2026-10.md) · [Third-party sources](THIRD_PARTY.md)
@@ -14,6 +23,23 @@ Participant and new Git author: 高本乾 · 3346147448@qq.com
 ## Run without building
 
 Install Node.js 22.13 or newer. From this repository, run these commands in CMD:
+
+```bat
+node tools\moonnginx-access-audit.mjs diff nginx.conf nginx.conf --root examples/regression/before --after-root examples/regression/after --host example.test --port 8080 --uri /admin/probe.txt --scope 127.0.0.0/8 --gate no-widening --format json
+echo %ERRORLEVEL%
+```
+
+Expected: **1**, `newly_allowed_count: "16777214"`, with witnesses and both
+rule origins. Both snapshots use normal Nginx syntax. To express a regression
+requirement over a whole subnet:
+
+```bat
+node tools\moonnginx-access-audit.mjs expect nginx.conf 127.0.0.2/31 --expect deny --root examples/regression/after --host example.test --port 8080 --uri /admin/probe.txt --format json
+```
+
+Expected: **1** because `.3` is unrestricted even though `.2` is denied.
+Change `after` to `before` for a passing expectation. No service is started
+by these commands. Existing structural audit commands remain available:
 
 ```bat
 node tools\moonnginx-access-audit.mjs contexts nginx.conf --root examples/nginx/files --format json
@@ -45,6 +71,10 @@ paths, selectors, severity mapping and unsuccessful analyses.
 - Confined offline includes with source files, line numbers and include chains.
 - Input, include expansion, audit-work and expanded-report resource budgets.
 - Text, JSON and Markdown reports; SARIF 2.1.0 for the `audit` command.
+- Request selection by literal IPv4 listener, exact host/default server and
+  flat exact/prefix location; context ordinals may differ between snapshots.
+- Exact, scoped IPv4 decision differences and whole-subnet expectations, with
+  replayable witnesses, source provenance and bounded comparison work.
 
 The parser is the existing Apache-2.0 `LuoYunxin1/moonnginx@0.2.0` package.
 The include semantics, access analysis, reports, file CLI and tests are this
@@ -59,6 +89,9 @@ MoonCIDR Audit base; see [provenance](docs/repository-migration.md).
 | `audit CONFIG` | Produce findings and apply a release gate |
 | `probe CONFIG IP --context ID` | Explain one IPv4 address decision |
 | `validate CONFIG` | Check the supported configuration and its dependencies |
+| `request CONFIG IP --host HOST --uri PATH` | Resolve a request and explain its address decision |
+| `diff BEFORE AFTER --host HOST --uri PATH` | Compare address decisions, not configuration text |
+| `expect CONFIG CIDR --expect allow\|deny --host HOST --uri PATH` | Require the outcome for every address in a subnet |
 
 Use `COMMAND --help` without preparing a configuration. `--strict` makes audit
 warnings fail the gate. Put `--` before literal filenames beginning with `-`.
@@ -66,7 +99,7 @@ warnings fail the gate. Put `--` before literal filenames beginning with `-`.
 | Status | Meaning |
 |---:|---|
 | 0 | Completed within the declared scope |
-| 1 | Audit gate rejected critical findings, or warnings in strict mode |
+| 1 | Audit, diff or subnet expectation gate rejected the result |
 | 2 | Invalid argument, file, encoding, syntax or include input |
 | 3 | Unsupported or incomplete analysis |
 | 4 | Resource budget exhausted |
@@ -89,11 +122,13 @@ Run the included MoonBit consumer example:
 ```bat
 moon update
 moon run examples/nginx --target wasm-gc
+moon run examples/regression --target wasm-gc
 ```
 
 The analysis API is in `nginx/pkg.generated.mbti`, including
 `analyze_nginx_sources`, `Analysis::audits`, `AccessContext::probe` and
-`render_sarif`. The original IPv4/CIDR APIs remain in the root package.
+`render_sarif`, `Analysis::resolve`, `compare_access` and `expect_access`.
+The original IPv4/CIDR APIs remain in the root package.
 This module has not yet been published to Mooncakes; building this checkout
 fetches the existing parser dependency, not a published copy of this module.
 
@@ -112,6 +147,7 @@ python tools\verify_files.py
 python tools\verify_distribution.py
 python tools\verify_ci_examples.py
 python tools\verify_sarif.py
+python tools\verify_regression.py
 moon package --list
 python tools\verify_repository.py --check-package
 ```
@@ -124,11 +160,18 @@ toolchain and is not claimed by the local Windows verification.
 
 ## Boundaries and maintenance
 
-This is a focused offline audit tool. It does not infer URL-to-location routing,
-model IPv6 or combined authentication, configure a server, enforce traffic,
-or prove that an entire Nginx deployment is secure. Unsupported access-relevant
-semantics block successful analysis. Keep these boundaries when interpreting
-reports or extending the API.
+The regression router supports plaintext IPv4, exact host names, default
+servers and flat literal prefix/exact locations. It requires a normalized
+ASCII URI without a query or escapes. It refuses ambiguous regex/nested
+selection, unsupported listeners and selected auth/rewrite dependencies.
+The structural `probe` command still requires a context selector.
+
+Comparison is exact for the **address module at one selected endpoint/URI
+and the declared IPv4 scope**, not all paths or final HTTP authorization.
+It does not model IPv6, TLS/SNI, index/internal redirects, application logic
+or arbitrary third-party modules. Keep `nginx -t`, resource/response tests and
+deployment checks in your workflow. This library opens no sockets and changes
+no server configuration. See the [precise profile](docs/request-regression.md).
 
 [Development record](docs/development-record.md),
 [validation evidence](docs/local-validation.md),

@@ -49,6 +49,22 @@ fn main {
       }
     }
   }
-  let result = @cli.run(options, sources)
+  let result = if options.command == @cli.Diff {
+    let after_sources = match
+      @fileio.load_sources(
+        options.after_root.unwrap_or(options.input_root),
+        options.other_entry.unwrap(),
+        options.limits,
+      ) {
+      Ok(value) => value
+      Err(error) => {
+        file_failure(error, options.format)
+        return
+      }
+    }
+    @cli.run_diff(options, sources, after_sources)
+  } else {
+    @cli.run(options, sources)
+  }
   finish(result.exit_code, result.stdout, result.stderr)
 }

@@ -4,6 +4,7 @@
 - [x] 正确仓库 ID 1416877460；保留原有两次提交和后续真实开发记录。
 - [x] 核对主办方 GitHub 当月要求，见 acceptance-2026-10.md。
 - [x] MoonBit 核心实现、实际 Nginx 文件审计、SARIF 与可执行示例。
+- [x] 初审反馈重做：请求选路、精确访问差异、整 CIDR 期望及两份合法 Nginx 配置的实际 HTTP 对照，见 request-regression.md。
 - [x] README、CMD 用法、贡献指南、来源及 Apache-2.0/NOTICE 材料。
 - [x] 本地三目标测试、实际文件、真实 Nginx、SARIF 及源码包检查。
 - [x] CI 包含四目标构建/测试和报告、许可检查；是否通过须看当前提交。

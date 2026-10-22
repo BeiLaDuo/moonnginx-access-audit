@@ -36,6 +36,14 @@ fn contains_access(nodes : Array[ExpandedNode]) -> Bool {
 }
 
 ///|
+fn contains_external_access(nodes : Array[ExpandedNode]) -> Bool {
+  nodes.any(fn(node) {
+    external_access_directive(node.directive.name) ||
+    contains_external_access(node.children)
+  })
+}
+
+///|
 fn external_access_directive(name : String) -> Bool {
   [
     "satisfy", "auth_basic", "auth_request", "auth_jwt", "real_ip_header", "real_ip_recursive",
@@ -263,11 +271,17 @@ fn make_context(
     } else if child.directive.has_block &&
       name != "location" &&
       name != "server" {
-      if contains_access(child.children) {
+      let external = contains_external_access(child.children)
+      if contains_access(child.children) || external {
         diagnostics.push(
           blocking_diagnostic(
-            "unsupported_access_context",
-            "Access rules appear in unsupported block: " + name,
+            if external {
+              "external_access_dependency"
+            } else {
+              "unsupported_access_context"
+            },
+            "Access or request-changing directives appear in unsupported block: " +
+            name,
             child,
             selector,
           ),
@@ -316,6 +330,17 @@ fn make_context(
     rules,
     diagnostics,
     audit_pair_budget: state.limits.max_audit_pairs,
+    routing: node.children.filter_map(fn(child) {
+      if ["listen", "server_name"].contains(child.directive.name) {
+        Some({
+          name: child.directive.name,
+          args: child.directive.args,
+          source: child.source,
+        })
+      } else {
+        None
+      }
+    }),
   }
   state.contexts.push(context)
   let mut server_count = 0
@@ -435,6 +460,13 @@ pub fn analyze_nginx_sources(
         Err(error) => return Err(error)
         Ok(_) => ()
       }
+    } else if node.directive.name == "load_module" {
+      state.diagnostics.push(
+        blocking_diagnostic(
+          "unsupported_dynamic_module", "Dynamically loaded modules are outside the built-in access profile",
+          node, "",
+        ),
+      )
     } else if node.directive.name == "allow" ||
       node.directive.name == "deny" ||
       access_case_variant(node.directive.name) {

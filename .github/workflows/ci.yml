@@ -73,6 +73,12 @@ jobs:
       - name: Compare against real Nginx
         run: python tools/verify_nginx.py --nginx /usr/sbin/nginx --cli-command-json '["node","tools/moonnginx-access-audit.mjs"]' --output _build/ci/nginx-comparison.json
 
+      - name: Prove useful differences between two nginx-valid configurations
+        run: python tools/verify_regression.py --nginx /usr/sbin/nginx --output _build/ci/regression.json
+
+      - name: Run the portable regression library consumer
+        run: moon run examples/regression --target wasm-gc
+
       - name: Measure project-owned MoonBit implementation
         run: python tools/measure_code.py --minimum 4000 --require-baseline --output _build/ci/code-count.json
 

@@ -9,9 +9,11 @@ MoonCIDR Audit v0.1.2 in a separate repository. Later changes add actual CLI
 behavior, stronger file boundaries, reproducible CI and the renamed module.
 Neither the CIDR base nor the Apache-2.0 moonnginx parser is presented as new work.
 
-Only offline HTTP IPv4 allow/deny semantics, structural contexts, source
-provenance, bounded includes and audit reports are modeled. Full routing,
-IPv6 and combined authorization remain outside the supported scope.
+The October 22 revision adds a conservative HTTP IPv4 request router, exact
+scoped before/after differences and whole-subnet expectations. Listener/Host/
+flat location identity is resolved independently in both snapshots; rule
+provenance and inheritance remain visible. Full routing, IPv6 and combined
+authorization remain outside the supported scope; see request-regression.md.
 
 New author/committer: 高本乾 <3346147448@qq.com>. Original commit metadata
 is preserved. The user authorized GitHub synchronization and renaming, with

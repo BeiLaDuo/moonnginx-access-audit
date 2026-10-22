@@ -1,0 +1,5 @@
+import {
+  "BeiLaDuo/moonnginx-access-audit/nginx",
+}
+
+pkgtype(kind: "executable")

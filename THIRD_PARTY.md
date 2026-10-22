@@ -8,6 +8,10 @@
 
 ## Behavioral references and test tools
 
+- Request routing references https://nginx.org/en/docs/http/request_processing.html and the official core module documentation. The conservative routing adapter, boundary comparison and regression fixtures are independently written for this project.
+- MoonPolicyProof (https://github.com/hutingyu-nuist/moonpolicyproof, Apache-2.0) was inspected for ecosystem overlap; it already offers generic five-tuple differences and assertions. No implementation was imported. This project's added scope is Nginx files, request routing, inheritance and source-aware regression, not ownership of general policy-difference algorithms.
+- The October 22 regression test uses external Nginx 1.30.6 with two independently created snapshots. No Nginx executable is bundled; tests only start their own loopback process and stop that owned process.
+
 - Nginx HTTP access module documentation and implementation: https://nginx.org/en/docs/http/ngx_http_access_module.html and https://github.com/nginx/nginx. Behavior was independently implemented; Nginx source code and its fixtures were not copied into the analysis library.
 - Official Nginx Windows 1.30.5 was used for the first delivery; 1.30.6 from https://nginx.org/download/nginx-1.30.6.zip was used for the 2026-10-20 local interoperability test. The executable is not redistributed. Test configurations and static content in `tests/integration-nginx/` were written for this project.
 - Verification and measurement scripts use Python's standard library. The optional `tools/render_submission_pdf.py` helper uses Pillow (`PIL`) and locally installed Noto Sans SC fonts; these are not redistributed. That helper is separate from the Markdown application, CLI, build and verification workflows.

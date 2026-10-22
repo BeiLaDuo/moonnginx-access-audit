@@ -6,6 +6,9 @@ pub(all) enum Command {
   Audit
   Probe
   Validate
+  Diff
+  Request
+  Expect
 } derive(Eq, Debug)
 
 ///|
@@ -19,6 +22,12 @@ pub(all) struct Options {
   format : String
   strict : Bool
   limits : @nginx.Limits
+  target : @nginx.RequestTarget?
+  other_entry : String?
+  after_root : String?
+  scope : String
+  gate : String
+  expect_allow : Bool?
 } derive(Debug)
 
 ///|
@@ -56,6 +65,12 @@ fn basic_options(command : Command) -> Options {
     format: "text",
     strict: false,
     limits: @nginx.Limits::default(),
+    target: None,
+    other_entry: None,
+    after_root: None,
+    scope: "0.0.0.0/0",
+    gate: "equivalent",
+    expect_allow: None,
   }
 }
 
@@ -72,6 +87,9 @@ pub fn parse_args(args : Array[String]) -> Result[Options, CliError] {
     "audit" => Audit
     "probe" => Probe
     "validate" => Validate
+    "diff" => Diff
+    "request" => Request
+    "expect" => Expect
     other =>
       return Err(argument_error("unknown_command", "unknown command: " + other))
   }
@@ -99,6 +117,15 @@ pub fn parse_args(args : Array[String]) -> Result[Options, CliError] {
   let mut limits = defaults.limits
   let mut index = 1
   let mut positional_only = false
+  let routed = command == Diff || command == Request || command == Expect
+  let mut host : String? = None
+  let mut uri : String? = None
+  let mut port = 80
+  let mut local_address = "127.0.0.1"
+  let mut after_root : String? = None
+  let mut scope = defaults.scope
+  let mut gate = defaults.gate
+  let mut expect_allow : Bool? = None
   while index < args.length() {
     let argument = args[index]
     if !positional_only && argument == "--" {
@@ -131,7 +158,12 @@ pub fn parse_args(args : Array[String]) -> Result[Options, CliError] {
       if argument != "--root" &&
         argument != "--context" &&
         argument != "--format" &&
-        argument != "--limits" {
+        argument != "--limits" &&
+        !(routed &&
+        [
+          "--host", "--uri", "--port", "--local-address", "--after-root", "--scope",
+          "--gate", "--expect",
+        ].contains(argument)) {
         return Err(
           argument_error("unknown_option", "unknown option: " + argument),
         )
@@ -151,6 +183,53 @@ pub fn parse_args(args : Array[String]) -> Result[Options, CliError] {
         )
       }
       match argument {
+        "--host" => host = Some(value)
+        "--uri" => uri = Some(value)
+        "--port" =>
+          port = match positive_int(value) {
+            Ok(number) => number
+            Err(error) => return Err(error)
+          }
+        "--local-address" => local_address = value
+        "--after-root" => {
+          if command != Diff {
+            return Err(
+              argument_error("invalid_option", "--after-root requires diff"),
+            )
+          }
+          after_root = Some(value)
+        }
+        "--scope" => {
+          if command != Diff {
+            return Err(
+              argument_error(
+                "invalid_option", "--scope requires diff; expect takes CIDR positionally",
+              ),
+            )
+          }
+          scope = value
+        }
+        "--gate" => {
+          if command != Diff ||
+            !["equivalent", "no-widening", "no-tightening"].contains(value) {
+            return Err(
+              argument_error(
+                "invalid_gate", "diff gate must be equivalent, no-widening or no-tightening",
+              ),
+            )
+          }
+          gate = value
+        }
+        "--expect" => {
+          if command != Expect || !["allow", "deny"].contains(value) {
+            return Err(
+              argument_error(
+                "invalid_expectation", "expect requires --expect allow|deny",
+              ),
+            )
+          }
+          expect_allow = Some(value == "allow")
+        }
         "--root" => {
           if value.contains("://") {
             return Err(
@@ -197,7 +276,7 @@ pub fn parse_args(args : Array[String]) -> Result[Options, CliError] {
       index = index + 1
     }
   }
-  let expected = if command == Probe { 2 } else { 1 }
+  let expected = if command == Probe || routed { 2 } else { 1 }
   if format == "sarif" && command != Audit {
     return Err(
       argument_error("invalid_format", "SARIF is available only for audit"),
@@ -227,18 +306,61 @@ pub fn parse_args(args : Array[String]) -> Result[Options, CliError] {
       ),
     )
   }
-  if command == Probe {
+  if command == Probe || command == Request {
     match validate_probe_ip(positionals[1]) {
       Err(error) => return Err(error)
       Ok(_) => ()
     }
+  }
+  if command == Diff {
+    match validate_entry(positionals[1]) {
+      Ok(_) => ()
+      Err(error) => return Err(error)
+    }
+  }
+  if command == Expect {
+    scope = positionals[1]
+  }
+  if command == Diff || command == Expect {
+    if @cidr.CidrBlock::parse(scope) is Err(message) {
+      return Err(argument_error("invalid_scope", message))
+    }
+  }
+  if command == Expect && expect_allow is None {
+    return Err(
+      argument_error(
+        "missing_expectation", "expect requires --expect allow|deny",
+      ),
+    )
+  }
+  let target = if routed {
+    if host is None || uri is None {
+      return Err(
+        argument_error(
+          "missing_target", "request, diff and expect require --host and --uri",
+        ),
+      )
+    }
+    let value : @nginx.RequestTarget = {
+      host: host.unwrap(),
+      uri: uri.unwrap(),
+      port,
+      local_address,
+    }
+    match value.validate() {
+      Ok(_) => ()
+      Err(error) => return Err(argument_error(error.code, error.message))
+    }
+    Some(value)
+  } else {
+    None
   }
   Ok({
     command,
     input_root,
     entry,
     context_selector,
-    ip: if command == Probe {
+    ip: if command == Probe || command == Request {
       Some(positionals[1])
     } else {
       None
@@ -246,6 +368,16 @@ pub fn parse_args(args : Array[String]) -> Result[Options, CliError] {
     format,
     strict,
     limits,
+    target,
+    other_entry: if command == Diff {
+      Some(positionals[1])
+    } else {
+      None
+    },
+    after_root,
+    scope,
+    gate,
+    expect_allow,
   })
 }
 

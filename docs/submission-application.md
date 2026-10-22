@@ -4,6 +4,6 @@
 
 一页说明见 [submission-application-one-page.md](submission-application-one-page.md)。申报信息按用户最新确认填写。
 
-已有基础、实际新增、功能边界、验证记录和第三方来源分别见 [october-scope.md](october-scope.md)、[nginx-file-cli.md](nginx-file-cli.md)、[local-validation.md](local-validation.md) 和 [THIRD_PARTY.md](../THIRD_PARTY.md)。
+本次根据初审反馈改为真实配置访问行为回归，详见 [request-regression.md](request-regression.md)。已有基础、实际新增、验证记录和来源见 [october-scope.md](october-scope.md)、[最新自查](final-review-2026-10-22.md) 和 [THIRD_PARTY.md](../THIRD_PARTY.md)。
 
 用户已授权同步代码到 GitHub；未提交比赛报名、创建远端发布或发布 Mooncakes 新版。

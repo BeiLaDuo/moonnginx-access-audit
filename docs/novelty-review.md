@@ -1,18 +1,23 @@
-# 十月扩展查重说明
+# 十月扩展查重与定位（2026-10-22）
 
-调研日期：2026-10-13。读取 https://mooncakes.io/api/v0/modules 返回的 2,952 条模块元数据，并核对相近项目公开说明。目录检索不是全生态逐文件审查，不保证没有未发布、私有或关键词缺失的相近项目。
+本轮重新核对 MoonCakes 公开目录的 3,226 条元数据和相近 GitHub 项目的 README/API。当前模块精确匹配为零；既有 cidr-audit 的发布不能代替它。检索不能证明不存在未发布、私有或关键词缺失的相近项目。
 
-## 已有交集
+| 既有项目 | 交集与处理 |
+|---|---|
+| [moonnginx](https://github.com/LuoYunxin1/moonnginx) 0.2.0 | 已有配置解析/查询/静态校验，直接依赖，不重复编写 lexer/parser |
+| [MoonPolicyProof](https://github.com/hutingyu-nuist/moonpolicyproof) 0.1.1 | 已有五元组语义差异、反例与断言；其输入为自定义无状态策略，要求调用者自行映射设备配置。通用差异/断言思想不算本项目独占创新 |
+| [MoonCIDR Audit](https://github.com/BeiLaDuo/mooncidr-audit) 0.1.2 | 自有旧项目，提供地址和有序规则基础；旧实现不计为本次新增 |
+| [MoonCIDR](https://github.com/lzh123411/21341) | 已有 IPv4 ACL/重叠与基础 IPv6，地址解析和普通审计不构成新价值 |
+| [moonproxy](https://github.com/1726914517-spec/moonproxy) 0.2.0 | L7 代理运行时、路由/负载均衡；本项目是离线 Nginx 快照回归工具，不实现代理服务 |
 
-- https://github.com/lzh123411/21341 已有 IPv4 有序 ACL、重叠诊断和基础 IPv6。地址解析与普通 ACL 不能作为本轮新增贡献。
-- https://github.com/hutingyu-nuist/moonpolicyproof 已基于 cidr-audit 提供五元组语义差异、反例和断言。本轮不重复开发该范围。
-- https://github.com/LuoYunxin1/moonnginx 已有 nginx.conf 配置树编解码。本轮直接复用其 0.2.0，不另写通用 lexer/parser，也不把依赖行数计入自有实现。
-- 旧项目 MoonCIDR Audit 已发布 BeiLaDuo/cidr-audit@0.1.2；新包尚未发布。基线的解析、规则审计、聚合和指令导入不作为全新项目申报。
+## 初审反馈后的实质调整
 
-## 本轮实质新增
+原先将审计输出格式、文件 CLI 和静态诊断作为主要卖点，不足以说明为何需要在 nginx -t 之外再使用一个工具。0.3.0 围绕维护者意图实现：
 
-Nginx HTTP IPv4 配置上下文与继承、离线 include 来源链与预算、区别于完整请求授权的三态地址判断、适配 Nginx 的遮蔽/终止规则审计、实际文件 CLI、结构化报告和真实服务互操作验证。
+1. 直接加载真实 Nginx 配置与 include；依据地址/端口、Host、路径选路，无需先手工转换为通用策略格式。
+2. 前后独立选取上下文，处理 server/location 重排与整表继承变化，避免按序号误配。
+3. 在地址模块有限模型内精确计算差异，返回区间、数量、原规则来源、继承来源和可复现反例。
+4. 将禁止扩大/缩小访问、范围等价及整网段预期作为可执行 CI 门禁。
+5. 以两份均通过 nginx -t 的配置和真实 HTTP 403→200 变化展示额外价值；不把语法错误当成核心案例。
 
-语义依据：https://nginx.org/en/docs/http/ngx_http_access_module.html 。新贡献定位为既有项目扩展，目标是让调用者把主配置目录中的实际文件交给离线审计流程。仅分析指定结构上下文，不宣称完整 Nginx 路由、IPv6、组合鉴权或全服务器安全。
-
-本轮参考并复用既有生态组件，而不是以新名字重复实现相同基础库。许可证和来源见 THIRD_PARTY.md。
+与 MoonPolicyProof 的算法目标存在交集；本项目新增的是 Nginx 专有配置语义与适配工作流，不宣称“生态中没有差异分析工具”。当前支持边界详见 [请求回归说明](request-regression.md)。仅换名、只增加报告格式或重复旧 CIDR 功能不计为本轮贡献。

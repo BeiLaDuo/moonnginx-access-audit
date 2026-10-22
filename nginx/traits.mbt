@@ -2,6 +2,30 @@
 pub extend SourceFile with Eq::{equal, not_equal}
 
 ///|
+pub extend RoutingDirective with Eq::{equal, not_equal}
+
+///|
+pub extend RoutingDirective with @debug.Debug::{to_repr}
+
+///|
+pub extend RequestTarget with Eq::{equal, not_equal}
+
+///|
+pub extend RequestTarget with @debug.Debug::{to_repr}
+
+///|
+pub extend AccessChange with Eq::{equal, not_equal}
+
+///|
+pub extend AccessChange with @debug.Debug::{to_repr}
+
+///|
+pub extend AccessComparison with Eq::{equal, not_equal}
+
+///|
+pub extend AccessComparison with @debug.Debug::{to_repr}
+
+///|
 pub extend SourceFile with @debug.Debug::{to_repr}
 
 ///|

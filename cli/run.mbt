@@ -15,6 +15,9 @@ pub fn help_text() -> String {
     #|  moonnginx-access-audit audit CONFIG [--context ID] [--strict] [OPTIONS]
     #|  moonnginx-access-audit probe CONFIG IP --context ID [OPTIONS]
     #|  moonnginx-access-audit validate CONFIG [OPTIONS]
+    #|  moonnginx-access-audit request CONFIG IP --host HOST --uri PATH [OPTIONS]
+    #|  moonnginx-access-audit diff BEFORE AFTER --host HOST --uri PATH [OPTIONS]
+    #|  moonnginx-access-audit expect CONFIG CIDR --expect allow|deny --host HOST --uri PATH [OPTIONS]
     #|  moonnginx-access-audit help
     #|  moonnginx-access-audit version
     #|  moonnginx-access-audit COMMAND --help
@@ -25,6 +28,11 @@ pub fn help_text() -> String {
     #|  --context ID         Exact selector from the contexts command
     #|  --strict             Audit also fails on warnings
     #|  --limits NAME=VALUE,...   Override positive integer resource limits
+    #|  --host HOST --uri PATH    Target host and normalized ASCII path, no query/escapes
+    #|  --port PORT --local-address IPv4   Listener endpoint; defaults 80 / 127.0.0.1
+    #|  --after-root DIRECTORY    Diff candidate root; defaults to --root
+    #|  --scope CIDR              Diff address range; defaults to all IPv4
+    #|  --gate MODE               Diff: equivalent (default), no-widening, no-tightening
     #|  --                   End options; later arguments are literal paths/IPs
     #|
     #|Limit names: max_sources, max_total_chars, max_source_chars,
@@ -35,9 +43,10 @@ pub fn help_text() -> String {
     #|CONFIG is relative to --root. Includes are anchored to CONFIG's directory.
     #|This tool analyzes only the supported Nginx IPv4 allow/deny scope.
     #|A probe reports address-rule behavior; it does not authorize a request.
-    #|It does not infer a location from a URL or model authentication.
+    #|request/diff/expect resolve exact host names and flat exact/prefix locations.
+    #|Regex, nested routing, TLS and authentication are outside that profile.
     #|
-    #|Exit codes: 0 completed; 1 audit gate failed; 2 input/IO error;
+    #|Exit codes: 0 completed/gate passed; 1 audit/diff/expect gate failed; 2 input/IO error;
     #|3 unsupported or incomplete analysis; 4 resource budget exceeded.
   )
 }
@@ -107,7 +116,7 @@ pub fn run(options : Options, sources : Array[@nginx.SourceFile]) -> CliResult {
     return complete(0, help_text())
   }
   if options.command == Version {
-    return complete(0, "MoonNginx Access Audit Nginx analyzer 0.2.0\n")
+    return complete(0, "MoonNginx Access Audit request regression 0.3.0\n")
   }
   // Public Options may also be constructed directly by library callers.
   match validate_entry(options.entry) {
@@ -148,6 +157,11 @@ pub fn run(options : Options, sources : Array[@nginx.SourceFile]) -> CliResult {
     @nginx.analyze_nginx_sources(options.entry, sources, limits=options.limits) {
     Ok(value) => value
     Err(error) => return config_failure(error, options.format)
+  }
+  if options.command == Request ||
+    options.command == Expect ||
+    options.command == Diff {
+    return run_regression(options, analysis, None)
   }
   // Do not let a partial import or unsupported directive produce a clean report.
   if options.command != Probe || analysis.has_blocking() {
@@ -253,6 +267,149 @@ pub fn run(options : Options, sources : Array[@nginx.SourceFile]) -> CliResult {
         ),
       )
     }
-    Help | Version => complete(0, "")
+    Help | Version | Request | Expect | Diff => complete(0, "")
   }
+}
+
+///|
+pub fn run_diff(
+  options : Options,
+  before_sources : Array[@nginx.SourceFile],
+  after_sources : Array[@nginx.SourceFile],
+) -> CliResult {
+  if options.command != Diff || options.other_entry is None {
+    return cli_failure(
+      argument_error("invalid_arguments", "run_diff requires diff options"),
+      options.format,
+    )
+  }
+  for entry in [options.entry, options.other_entry.unwrap()] {
+    match validate_entry(entry) {
+      Err(error) => return cli_failure(error, options.format)
+      Ok(_) => ()
+    }
+  }
+  let before = match
+    @nginx.analyze_nginx_sources(
+      options.entry,
+      before_sources,
+      limits=options.limits,
+    ) {
+    Ok(value) => value
+    Err(error) => return config_failure(error, options.format)
+  }
+  let after = match
+    @nginx.analyze_nginx_sources(
+      options.other_entry.unwrap(),
+      after_sources,
+      limits=options.limits,
+    ) {
+    Ok(value) => value
+    Err(error) => return config_failure(error, options.format)
+  }
+  run_regression(options, before, Some(after))
+}
+
+///|
+fn run_regression(
+  options : Options,
+  analysis : @nginx.Analysis,
+  after : @nginx.Analysis?,
+) -> CliResult {
+  if options.target is None ||
+    !["text", "json", "markdown"].contains(options.format) {
+    return cli_failure(
+      argument_error(
+        "invalid_arguments", "Regression commands require a target and text/json/markdown output",
+      ),
+      options.format,
+    )
+  }
+  let target = options.target.unwrap()
+  let result = if options.command == Request {
+    let context = match analysis.resolve(target) {
+      Ok(value) => value
+      Err(error) => return config_failure(error, options.format)
+    }
+    let probe = match context.probe(options.ip.unwrap_or("")) {
+      Ok(value) => value
+      Err(error) => return config_failure(error, options.format)
+    }
+    return complete(0, @nginx.render_probe(probe, options.format))
+  } else if options.command == Diff {
+    if after is None ||
+      !["equivalent", "no-widening", "no-tightening"].contains(options.gate) {
+      return cli_failure(
+        argument_error(
+          "invalid_arguments", "diff requires two snapshots and a valid gate",
+        ),
+        options.format,
+      )
+    }
+    @nginx.compare_access(
+      analysis,
+      after.unwrap(),
+      target,
+      scope=options.scope,
+      max_work=options.limits.max_audit_pairs,
+      max_changes=options.limits.max_directives,
+    )
+  } else {
+    if options.expect_allow is None {
+      return cli_failure(
+        argument_error("missing_expectation", "expect requires an outcome"),
+        options.format,
+      )
+    }
+    @nginx.expect_access(
+      analysis,
+      target,
+      options.scope,
+      options.expect_allow.unwrap(),
+      max_work=options.limits.max_audit_pairs,
+      max_changes=options.limits.max_directives,
+    )
+  }
+  let comparison = match result {
+    Ok(value) => value
+    Err(error) => return config_failure(error, options.format)
+  }
+  let failed = if options.command == Expect || options.gate == "equivalent" {
+    !comparison.changes.is_empty()
+  } else if options.gate == "no-widening" {
+    comparison.newly_allowed_count != "0"
+  } else {
+    comparison.newly_denied_count != "0"
+  }
+  let output = if options.format == "json" {
+    let value = comparison.to_json()
+    if value is Object(fields) {
+      fields["operation"] = Json(
+        if options.command == Expect {
+          "expect"
+        } else {
+          "diff"
+        },
+      )
+      fields["gate"] = Json(
+        if options.command == Expect {
+          if options.expect_allow.unwrap() {
+            "all-addresses-allow"
+          } else {
+            "all-addresses-deny"
+          }
+        } else {
+          options.gate
+        },
+      )
+      fields["gate_passed"] = Json(!failed)
+    }
+    value.stringify(indent=2)
+  } else {
+    comparison.render(options.format) +
+    "Gate: " +
+    (if failed { "FAILED" } else { "PASSED" }) +
+    "\n"
+  }
+  complete(if failed { 1 } else { 0 }, output)
 }

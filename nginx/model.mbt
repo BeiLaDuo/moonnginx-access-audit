@@ -180,6 +180,15 @@ pub(all) struct AccessContext {
   rules : Array[AccessRule]
   diagnostics : Array[Diagnostic]
   audit_pair_budget : Int32
+  routing : Array[RoutingDirective]
+} derive(Eq, Debug)
+
+///|
+/// Parsed, include-expanded declarations used by the conservative request router.
+pub(all) struct RoutingDirective {
+  name : String
+  args : Array[String]
+  source : SourceLocation
 } derive(Eq, Debug)
 
 ///|

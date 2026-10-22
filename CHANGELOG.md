@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.0 — Request access regression (2026-10-22, unpublished)
+
+- Compare real before/after Nginx files at a host, listener and URI, independent
+  of context ordinals; resolve exact names, defaults and flat exact/prefix
+  locations, refusing ambiguous routing.
+- Compute exact scoped IPv4 differences using rule boundary partitions,
+  64-bit counts, source-aware witnesses and bounded work/output.
+- Add request/diff/expect commands, directional gates and whole-subnet checks.
+- Detect request-changing directives inside unsupported blocks and dynamically
+  loaded modules instead of silently assuming their semantics.
+- Add an independent exhaustive oracle, a portable library consumer, real
+  snapshot CLI tests and a two-version Nginx HTTP comparison.
+- Reframe the proposal around legal-but-unintended access changes and record
+  the precise model and remaining publication requirement.
+
 ## Unreleased — October 2026 continuation
 
 - Add a MoonBit SARIF 2.1.0 exporter for existing Nginx audit findings, with

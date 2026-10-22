@@ -15,6 +15,8 @@ pub fn parse_args(Array[String]) -> Result[Options, CliError]
 
 pub fn run(Options, Array[@nginx.SourceFile]) -> CliResult
 
+pub fn run_diff(Options, Array[@nginx.SourceFile], Array[@nginx.SourceFile]) -> CliResult
+
 // Errors
 
 // Types and methods
@@ -43,6 +45,9 @@ pub(all) enum Command {
   Audit
   Probe
   Validate
+  Diff
+  Request
+  Expect
 } derive(Eq, @debug.Debug)
 pub fn Command::equal(Self, Self) -> Bool
 pub fn Command::not_equal(Self, Self) -> Bool
@@ -57,6 +62,12 @@ pub(all) struct Options {
   format : String
   strict : Bool
   limits : @nginx.Limits
+  target : @nginx.RequestTarget?
+  other_entry : String?
+  after_root : String?
+  scope : String
+  gate : String
+  expect_allow : Bool?
 } derive(@debug.Debug)
 pub fn Options::to_repr(Self) -> @debug.Repr
 
