@@ -4,6 +4,7 @@ pub(all) enum Command {
   Version
   Contexts
   Audit
+  Security
   Probe
   Validate
   Diff
@@ -85,6 +86,7 @@ pub fn parse_args(args : Array[String]) -> Result[Options, CliError] {
     "version" | "--version" => Version
     "contexts" => Contexts
     "audit" => Audit
+    "security" => Security
     "probe" => Probe
     "validate" => Validate
     "diff" => Diff
@@ -144,10 +146,10 @@ pub fn parse_args(args : Array[String]) -> Result[Options, CliError] {
       }
       seen.push(argument)
       if argument == "--strict" {
-        if command != Audit {
+        if command != Audit && command != Security {
           return Err(
             argument_error(
-              "invalid_option", "--strict is available only for audit",
+              "invalid_option", "--strict is available only for audit and security",
             ),
           )
         }
@@ -277,9 +279,11 @@ pub fn parse_args(args : Array[String]) -> Result[Options, CliError] {
     }
   }
   let expected = if command == Probe || routed { 2 } else { 1 }
-  if format == "sarif" && command != Audit {
+  if format == "sarif" && command != Audit && command != Security {
     return Err(
-      argument_error("invalid_format", "SARIF is available only for audit"),
+      argument_error(
+        "invalid_format", "SARIF is available only for audit and security",
+      ),
     )
   }
   if positionals.length() != expected {

@@ -8,6 +8,16 @@
 
 ## Behavioral references and test tools
 
+- Gixy-Next, https://github.com/MegaManSec/Gixy-Next, MPL-2.0, is the primary
+  security-check benchmark for 0.4.0. Reviewed upstream revision:
+  `6192d7f680e916d638dddd784d4e2a23ae5a24bb` (2026-10-16); comparison tool:
+  PyPI `gixy-next==0.9.0`. Public rule documentation informs the independently
+  written MoonBit checks. No upstream implementation, fixtures, templates or
+  assets are copied or bundled. Gixy-Next is an external development reference,
+  not a runtime dependency or a claim of complete feature parity. Its license
+  does not replace this project's Apache-2.0 license. Any future source port
+  must retain the applicable MPL notices and license obligations.
+
 - Request routing references https://nginx.org/en/docs/http/request_processing.html and the official core module documentation. The conservative routing adapter, boundary comparison and regression fixtures are independently written for this project.
 - MoonPolicyProof (https://github.com/hutingyu-nuist/moonpolicyproof, Apache-2.0) was inspected for ecosystem overlap; it already offers generic five-tuple differences and assertions. No implementation was imported. This project's added scope is Nginx files, request routing, inheritance and source-aware regression, not ownership of general policy-difference algorithms.
 - The October 22 regression test uses external Nginx 1.30.6 with two independently created snapshots. No Nginx executable is bundled; tests only start their own loopback process and stop that owned process.

@@ -3,7 +3,7 @@
 
 name = "BeiLaDuo/moonnginx-access-audit"
 
-version = "0.3.0"
+version = "0.4.0"
 
 import {
   "LuoYunxin1/moonnginx@0.2.0",
@@ -19,4 +19,4 @@ keywords = [ "cidr", "ipv4", "network", "audit", "security", "nginx", "cli" ]
 
 preferred_target = "wasm-gc"
 
-description = "Nginx configuration access regression: request routing, exact IPv4 semantic differences and whole-subnet CI expectations in MoonBit"
+description = "MoonBit Nginx security configuration scanner with source-aware findings, CI gates and IPv4 access regression"

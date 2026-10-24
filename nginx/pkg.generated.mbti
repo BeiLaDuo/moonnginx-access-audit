@@ -34,7 +34,11 @@ pub fn render_probe(ProbeResult, String) -> String
 
 pub fn render_sarif(Analysis, Array[ContextAudit], selector? : String?) -> String
 
+pub fn render_security(SecurityReport, String) -> String
+
 pub fn resolve_include_path(String, String) -> Result[String, ConfigError]
+
+pub fn scan_security_sources(String, Array[SourceFile], limits? : Limits) -> Result[SecurityReport, ConfigError]
 
 // Errors
 
@@ -228,6 +232,31 @@ pub(all) struct RoutingDirective {
 pub fn RoutingDirective::equal(Self, Self) -> Bool
 pub fn RoutingDirective::not_equal(Self, Self) -> Bool
 pub fn RoutingDirective::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SecurityFinding {
+  code : String
+  severity : @moonnginx-access-audit.Severity
+  message : String
+  remediation : String
+  source : SourceLocation
+  context : String
+  evidence : String
+} derive(Eq, @debug.Debug)
+pub fn SecurityFinding::equal(Self, Self) -> Bool
+pub fn SecurityFinding::not_equal(Self, Self) -> Bool
+pub fn SecurityFinding::to_repr(Self) -> @debug.Repr
+
+pub(all) struct SecurityReport {
+  entry : String
+  findings : Array[SecurityFinding]
+  diagnostics : Array[Diagnostic]
+  checks : Array[String]
+} derive(Eq, @debug.Debug)
+pub fn SecurityReport::equal(Self, Self) -> Bool
+pub fn SecurityReport::gate_failed(Self, Bool) -> Bool
+pub fn SecurityReport::has_blocking(Self) -> Bool
+pub fn SecurityReport::not_equal(Self, Self) -> Bool
+pub fn SecurityReport::to_repr(Self) -> @debug.Repr
 
 pub(all) struct SourceFile {
   path : String

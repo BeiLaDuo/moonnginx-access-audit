@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0 — Security configuration scanner (2026-10-23, unpublished)
+
+- Add an independent MoonBit security scanner over include-expanded directive
+  trees, retaining nested/regex locations independently of request routing.
+- Add source-aware security findings, remediation, coverage diagnostics and
+  security CLI gates in text, JSON, Markdown and SARIF.
+- Benchmark selected independently authored risk/repair pairs against pinned
+  Gixy-Next 0.9.0; document partial coverage and source/license provenance.
+- Add real Nginx security regression fixtures and CI checks alongside the
+  existing exact IPv4 comparison. Update the proposal to the expanded scope.
+
 ## 0.3.0 — Request access regression (2026-10-22, unpublished)
 
 - Compare real before/after Nginx files at a host, listener and URI, independent

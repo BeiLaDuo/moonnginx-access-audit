@@ -43,6 +43,7 @@ pub(all) enum Command {
   Version
   Contexts
   Audit
+  Security
   Probe
   Validate
   Diff

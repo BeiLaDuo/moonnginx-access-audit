@@ -36,10 +36,13 @@ After `moon fmt`, inspect generated public API files such as
 
 ## Scope
 
-MoonNginx Access Audit is an IPv4/CIDR rule audit library. Keep the core library
-focused on parsing, normalization, first-match decisions, overlap and shadowing
-analysis, offline rule import, CIDR aggregation, coverage analysis, policy
-presets, deployment gates, and report output.
+MoonNginx Access Audit is a MoonBit Nginx security configuration scanner and
+IPv4 access regression library. On 2026-10-23 the user explicitly expanded
+the scope to important security checks benchmarked against Gixy-Next.
+Keep static security scanning independent from the conservative request router:
+nested/regex/TLS configurations can be scanned without claiming full behavioral
+equivalence. Document each rule's evidence, limits and remediation; test risk
+and repaired configurations, and use real Nginx where behavior is observable.
 
 Avoid adding live network access, firewall control, packet capture, or
 cloud-provider credentials to the core project.

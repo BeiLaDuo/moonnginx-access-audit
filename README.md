@@ -1,7 +1,14 @@
 # MoonNginx Access Audit
 
-Find unintended access changes between real Nginx configuration snapshots.
-The request router and exact IPv4 comparison engine are implemented in MoonBit.
+Scan real Nginx configurations for security mistakes, then check unintended
+IPv4 access changes between configuration snapshots. The analysis is MoonBit.
+
+The `security` command checks expanded configuration trees for alias traversal,
+lost response headers, unsafe proxy targets/Host forwarding, rewrite-phase
+access bypass and other security mistakes. It scans nested and regex locations
+without requiring the limited request router to resolve a URL. Findings include
+source locations, evidence and remediation. Gixy-Next is the primary benchmark;
+this is an independently implemented subset, not a complete port.
 
 `nginx -t` checks configuration syntax and referenced files. A valid edit can
 still expose an admin path: adding one child `deny` replaces the entire
@@ -9,9 +16,10 @@ inherited allow-list. This tool compares the resulting address decisions for
 a specified host, listener and URI, reports newly allowed/denied intervals,
 and fails CI when the change violates an explicit gate.
 
+[Security rules and Gixy-Next comparison](docs/security-scanner.md) ·
 [Regression workflow and supported profile](docs/request-regression.md) ·
 [Revised proposal](docs/submission-application-one-page.md) ·
-[Latest local review](docs/final-review-2026-10-22.md)
+[Latest engineering review](docs/review-2026-10-24.md)
 
 [中文使用说明](docs/nginx-file-cli.md) · [SARIF integration](docs/sarif.md) ·
 [Acceptance checklist](docs/acceptance-2026-10.md) · [Third-party sources](THIRD_PARTY.md)
@@ -23,6 +31,22 @@ Participant and new Git author: 高本乾 · 3346147448@qq.com
 ## Run without building
 
 Install Node.js 22.13 or newer. From this repository, run these commands in CMD:
+
+```bat
+node tools\moonnginx-access-audit.mjs security nginx.conf --root examples/security/risky --strict --format json
+node tools\moonnginx-access-audit.mjs security nginx.conf --root examples/security/repaired --strict --format json
+```
+
+The first example reports security mistakes and exits 1; the repaired example
+exits 0. A clean result means the implemented static checks found no issue,
+not that every Nginx module, request path or application is secure. Coverage
+diagnostics and resource errors must not be ignored. Export findings for CI:
+
+```bat
+node tools\moonnginx-access-audit.mjs security nginx.conf --root examples/security/risky --format sarif > security.sarif
+```
+
+For a before/after access regression:
 
 ```bat
 node tools\moonnginx-access-audit.mjs diff nginx.conf nginx.conf --root examples/regression/before --after-root examples/regression/after --host example.test --port 8080 --uri /admin/probe.txt --scope 127.0.0.0/8 --gate no-widening --format json
@@ -70,7 +94,7 @@ paths, selectors, severity mapping and unsuccessful analyses.
   CIDR normalization and unrestricted fallbacks.
 - Confined offline includes with source files, line numbers and include chains.
 - Input, include expansion, audit-work and expanded-report resource budgets.
-- Text, JSON and Markdown reports; SARIF 2.1.0 for the `audit` command.
+- Text, JSON and Markdown reports; SARIF 2.1.0 for the `audit` and `security` commands.
 - Request selection by literal IPv4 listener, exact host/default server and
   flat exact/prefix location; context ordinals may differ between snapshots.
 - Exact, scoped IPv4 decision differences and whole-subnet expectations, with
@@ -85,6 +109,7 @@ MoonCIDR Audit base; see [provenance](docs/repository-migration.md).
 
 | Command | Purpose |
 |---|---|
+| `security CONFIG` | Scan configuration security patterns, with evidence and remediation |
 | `contexts CONFIG` | List structural selectors and effective rule origins |
 | `audit CONFIG` | Produce findings and apply a release gate |
 | `probe CONFIG IP --context ID` | Explain one IPv4 address decision |
@@ -93,7 +118,7 @@ MoonCIDR Audit base; see [provenance](docs/repository-migration.md).
 | `diff BEFORE AFTER --host HOST --uri PATH` | Compare address decisions, not configuration text |
 | `expect CONFIG CIDR --expect allow\|deny --host HOST --uri PATH` | Require the outcome for every address in a subnet |
 
-Use `COMMAND --help` without preparing a configuration. `--strict` makes audit
+Use `COMMAND --help` without preparing a configuration. `--strict` makes security/audit
 warnings fail the gate. Put `--` before literal filenames beginning with `-`.
 
 | Status | Meaning |
@@ -127,7 +152,7 @@ moon run examples/regression --target wasm-gc
 
 The analysis API is in `nginx/pkg.generated.mbti`, including
 `analyze_nginx_sources`, `Analysis::audits`, `AccessContext::probe` and
-`render_sarif`, `Analysis::resolve`, `compare_access` and `expect_access`.
+`render_sarif`, `scan_security_sources`, `render_security`, `Analysis::resolve`, `compare_access` and `expect_access`.
 The original IPv4/CIDR APIs remain in the root package.
 This module has not yet been published to Mooncakes; building this checkout
 fetches the existing parser dependency, not a published copy of this module.
@@ -148,6 +173,7 @@ python tools\verify_distribution.py
 python tools\verify_ci_examples.py
 python tools\verify_sarif.py
 python tools\verify_regression.py
+python tools\verify_security.py
 moon package --list
 python tools\verify_repository.py --check-package
 ```
@@ -159,6 +185,13 @@ CI adds Linux native build/tests. Windows native compilation needs its own C
 toolchain and is not claimed by the local Windows verification.
 
 ## Boundaries and maintenance
+
+The security scanner follows include-expanded directive contexts, including
+nested/regex locations and configurations containing TLS or authentication.
+This structural coverage does not imply full regex analysis, variable taint
+analysis or complete behavior regression. The [rule matrix](docs/security-scanner.md)
+documents implemented checks and unsupported Gixy-Next capabilities. Dynamic
+variables/modules may require manual review; keep Nginx syntax and runtime tests.
 
 The regression router supports plaintext IPv4, exact host names, default
 servers and flat literal prefix/exact locations. It requires a normalized

@@ -48,3 +48,8 @@ HTTP 场景通过。SARIF 实际行为与原 JSON 报告逐项一致，七份实
 在 71594d3 基线上增加请求级配置回归能力：Nginx 监听/Host/平级 location 选择、与上下文序号无关的双快照映射、精确区间差异、全 CIDR 期望及三个文件 CLI 命令。核心算法和门禁均为 MoonBit；Node 继续只承担文件/进程参数边界。
 
 测试包括独立整数区间解释器穷举、来源与继承检查、预算失败与路由不确定性，以及两份 nginx -t 均合法的实际配置和 14 次真实 HTTP 对照。README 和申报材料围绕访问意图重写。旧 CIDR、既有解析器和已实现的 SARIF 不计为这次新增。当前验证和未完成事项见 final-review-2026-10-22.md。
+
+## 2026-10-24 security scanner
+
+Added 15 independently implemented static HTTP security checks benchmarked against Gixy-Next, an independent security CLI, source-aware remediation reports, explicit partial coverage, risk/repair files, real Nginx HTTP oracles and pinned external benchmark CI. This follows the user's scope expansion; original CIDR code and the previous access-regression work remain attributed separately. Added a final report-budget guard for main-context findings and a regression test. No Mooncakes publication or contest submission was performed.
+

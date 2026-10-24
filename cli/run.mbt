@@ -8,11 +8,12 @@ pub(all) struct CliResult {
 ///|
 pub fn help_text() -> String {
   (
-    #|MoonNginx Access Audit - offline Nginx IPv4 address-access analysis
+    #|MoonNginx Access Audit - offline Nginx security checks and access regression
     #|
     #|Usage:
     #|  moonnginx-access-audit contexts CONFIG [OPTIONS]
     #|  moonnginx-access-audit audit CONFIG [--context ID] [--strict] [OPTIONS]
+    #|  moonnginx-access-audit security CONFIG [--strict] [OPTIONS]
     #|  moonnginx-access-audit probe CONFIG IP --context ID [OPTIONS]
     #|  moonnginx-access-audit validate CONFIG [OPTIONS]
     #|  moonnginx-access-audit request CONFIG IP --host HOST --uri PATH [OPTIONS]
@@ -24,9 +25,9 @@ pub fn help_text() -> String {
     #|
     #|Options:
     #|  --root DIRECTORY     Local input root, default '.'
-    #|  --format FORMAT      text, json, markdown, or sarif (audit only); default text
+    #|  --format FORMAT      text, json, markdown, or sarif (audit/security); default text
     #|  --context ID         Exact selector from the contexts command
-    #|  --strict             Audit also fails on warnings
+    #|  --strict             Audit/security also fail on warnings
     #|  --limits NAME=VALUE,...   Override positive integer resource limits
     #|  --host HOST --uri PATH    Target host and normalized ASCII path, no query/escapes
     #|  --port PORT --local-address IPv4   Listener endpoint; defaults 80 / 127.0.0.1
@@ -41,12 +42,15 @@ pub fn help_text() -> String {
     #|Example: --limits max_sources=32,max_include_depth=8
     #|
     #|CONFIG is relative to --root. Includes are anchored to CONFIG's directory.
-    #|This tool analyzes only the supported Nginx IPv4 allow/deny scope.
+    #|security scans configuration structure for documented security patterns,
+    #|including regex locations, TLS, and authentication configuration.
+    #|Its coverage diagnostics identify incomplete checks; it is not nginx -t.
+    #|audit/probe/validate analyze the supported Nginx IPv4 allow/deny scope.
     #|A probe reports address-rule behavior; it does not authorize a request.
     #|request/diff/expect resolve exact host names and flat exact/prefix locations.
     #|Regex, nested routing, TLS and authentication are outside that profile.
     #|
-    #|Exit codes: 0 completed/gate passed; 1 audit/diff/expect gate failed; 2 input/IO error;
+    #|Exit codes: 0 completed/gate passed; 1 audit/security/diff/expect gate failed; 2 input/IO error;
     #|3 unsupported or incomplete analysis; 4 resource budget exceeded.
   )
 }
@@ -116,7 +120,9 @@ pub fn run(options : Options, sources : Array[@nginx.SourceFile]) -> CliResult {
     return complete(0, help_text())
   }
   if options.command == Version {
-    return complete(0, "MoonNginx Access Audit request regression 0.3.0\n")
+    return complete(
+      0, "MoonNginx Access Audit security and access regression 0.4.0\n",
+    )
   }
   // Public Options may also be constructed directly by library callers.
   match validate_entry(options.entry) {
@@ -128,13 +134,19 @@ pub fn run(options : Options, sources : Array[@nginx.SourceFile]) -> CliResult {
     options.format != "markdown" &&
     options.format != "sarif" {
     return cli_failure(
-      argument_error("invalid_format", "format must be text, json, or markdown"),
+      argument_error(
+        "invalid_format", "format must be text, json, markdown, or sarif",
+      ),
       "text",
     )
   }
-  if options.format == "sarif" && options.command != Audit {
+  if options.format == "sarif" &&
+    options.command != Audit &&
+    options.command != Security {
     return cli_failure(
-      argument_error("invalid_format", "SARIF is available only for audit"),
+      argument_error(
+        "invalid_format", "SARIF is available only for audit and security",
+      ),
       "text",
     )
   }
@@ -152,6 +164,37 @@ pub fn run(options : Options, sources : Array[@nginx.SourceFile]) -> CliResult {
       Err(error) => return cli_failure(error, options.format)
       Ok(_) => ()
     }
+  }
+  // Security checks inspect the expanded directive tree directly. Routing and
+  // IPv4 access-profile restrictions must not prevent scanning TLS or regexes.
+  if options.command == Security {
+    if options.context_selector is Some(_) ||
+      options.target is Some(_) ||
+      options.ip is Some(_) {
+      return cli_failure(
+        argument_error(
+          "invalid_option", "security scans the complete configuration; context and request selectors are not supported",
+        ),
+        options.format,
+      )
+    }
+    let report = match
+      @nginx.scan_security_sources(
+        options.entry,
+        sources,
+        limits=options.limits,
+      ) {
+      Ok(value) => value
+      Err(error) => return config_failure(error, options.format)
+    }
+    let exit_code = if report.has_blocking() {
+      3
+    } else if report.gate_failed(options.strict) {
+      1
+    } else {
+      0
+    }
+    return complete(exit_code, @nginx.render_security(report, options.format))
   }
   let analysis = match
     @nginx.analyze_nginx_sources(options.entry, sources, limits=options.limits) {
@@ -267,7 +310,7 @@ pub fn run(options : Options, sources : Array[@nginx.SourceFile]) -> CliResult {
         ),
       )
     }
-    Help | Version | Request | Expect | Diff => complete(0, "")
+    Help | Version | Request | Expect | Diff | Security => complete(0, "")
   }
 }
 

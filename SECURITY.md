@@ -57,3 +57,8 @@ Security fixes are applied to the latest version available on the main branch.
 正则/嵌套路由、TLS、IPv6、认证组合、real_ip、重写和内部重定向等不属于当前完整模型。工具对已识别的相关不支持语义阻塞；任意第三方模块不在模型中。动态加载模块也阻塞。URI 输入必须预先规范化，不接受转义、查询和点段。不要把结果直接当作真实客户端最终 HTTP 状态承诺。
 
 差异按规则边界分区，在求值前检查工作预算，输出区间也有预算；预算失败不会返回部分通过。整个 IPv4 的计数采用 64 位整数。测试服务仅使用临时目录和回环端点，清理只针对脚本自己启动的进程。
+
+## 0.4.0 static security scope
+
+The security command scans HTTP directive trees independently of request routing. See docs/security-scanner.md for each check, its limits and partial-coverage diagnostics. A clean selected scan is not a proof of full module, regex, variable or application safety.
+

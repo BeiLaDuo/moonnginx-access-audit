@@ -1,0 +1,79 @@
+[
+  {
+    "id": "host-header-source",
+    "code": "host_spoofing",
+    "severity": "warning",
+    "risky": "http { server { proxy_set_header Host $http_host; } }",
+    "repaired": "http { server { proxy_set_header Host backend.example; } }"
+  },
+  {
+    "id": "request-controlled-upstream",
+    "code": "proxy_pass_variable_authority",
+    "severity": "warning",
+    "risky": "http { server { location / { proxy_pass http://$arg_target; } } }",
+    "repaired": "http { server { location / { proxy_pass http://127.0.0.1:9000$request_uri; } } }"
+  },
+  {
+    "id": "allowlist-fallthrough",
+    "code": "allow_without_deny",
+    "severity": "warning",
+    "risky": "http { server { location /admin/ { allow 10.0.0.0/8; } } }",
+    "repaired": "http { server { location /admin/ { allow 10.0.0.0/8; deny all; } } }"
+  },
+  {
+    "id": "filesystem-root",
+    "code": "filesystem_root_exposure",
+    "severity": "critical",
+    "risky": "http { server { location / { root /; } } }",
+    "repaired": "http { server { location / { root html; } } }"
+  },
+  {
+    "id": "duplicate-content-type",
+    "code": "add_header_content_type",
+    "severity": "warning",
+    "risky": "http { server { add_header Content-Type text/plain; } }",
+    "repaired": "http { server { default_type text/plain; } }"
+  },
+  {
+    "id": "response-header-newline",
+    "code": "add_header_multiline",
+    "severity": "warning",
+    "risky": "http { server { add_header X-Example \"value\nInjected: fixture\"; } }",
+    "repaired": "http { server { add_header X-Example fixture; } }"
+  },
+  {
+    "id": "referer-bypass",
+    "code": "valid_referers",
+    "severity": "warning",
+    "risky": "http { server { valid_referers none blocked example.test; } }",
+    "repaired": "http { server { valid_referers example.test; } }"
+  },
+  {
+    "id": "off-is-a-log-filename",
+    "code": "error_log_off",
+    "severity": "warning",
+    "risky": "error_log off; http { server { } }",
+    "repaired": "error_log logs/error.log; http { server { } }"
+  },
+  {
+    "id": "explicit-version-disclosure",
+    "code": "server_tokens",
+    "severity": "info",
+    "risky": "http { server_tokens on; server { } }",
+    "repaired": "http { server_tokens off; server { } }"
+  },
+  {
+    "id": "nested-regex-security-scan",
+    "code": "alias_traversal",
+    "severity": "critical",
+    "risky": "http { server { listen 443 ssl; server_name ~^tenant[0-9]+[.]example$; location / { location /assets { alias html/assets/; } } location ~ [.]php$ { deny all; } } }",
+    "repaired": "http { server { listen 443 ssl; server_name ~^tenant[0-9]+[.]example$; location / { location /assets/ { alias html/assets/; } } location ~ [.]php$ { deny all; } } }"
+  },
+  {
+    "id": "conditional-return-bypass",
+    "code": "return_bypasses_allow_deny",
+    "severity": "critical",
+    "risky": "http { server { deny all; location / { if ($request_method = GET) { return 200 fixture; } } } }",
+    "repaired": "http { server { deny all; location / { if ($request_method = GET) { return 403; } } } }"
+  }
+]
