@@ -19,7 +19,7 @@ and fails CI when the change violates an explicit gate.
 [Security rules and Gixy-Next comparison](docs/security-scanner.md) ·
 [Regression workflow and supported profile](docs/request-regression.md) ·
 [Revised proposal](docs/submission-application-one-page.md) ·
-[Latest engineering review](docs/review-2026-10-24.md)
+[Current acceptance review](docs/acceptance-review-2026-10-29.md)
 
 [中文使用说明](docs/nginx-file-cli.md) · [SARIF integration](docs/sarif.md) ·
 [Acceptance checklist](docs/acceptance-2026-10.md) · [Third-party sources](THIRD_PARTY.md)
@@ -29,6 +29,13 @@ MoonBit module: `BeiLaDuo/moonnginx-access-audit`
 Participant and new Git author: 高本乾 · 3346147448@qq.com
 
 ## Run without building
+
+Get the public source in CMD:
+
+```bat
+git clone https://github.com/BeiLaDuo/moonnginx-access-audit.git
+cd moonnginx-access-audit
+```
 
 Install Node.js 22.13 or newer. From this repository, run these commands in CMD:
 
@@ -157,9 +164,14 @@ The original IPv4/CIDR APIs remain in the root package.
 This module has not yet been published to Mooncakes; building this checkout
 fetches the existing parser dependency, not a published copy of this module.
 
-Build and verify with MoonBit and Python 3.10+:
+Build with **moonc 0.10.16 or newer** ([MoonBit installation](https://www.moonbitlang.com/download)),
+Node.js 22.13+ and Python 3.10+. The locally verified compiler is
+`moonc v0.10.16+b1a0e846e`; CI explicitly rejects compilers below 0.10.16.
+To build and verify from the source checkout:
 
 ```bat
+moon update
+python tools\check_toolchain.py
 moon info
 moon fmt --check
 moon check --target all --deny-warn

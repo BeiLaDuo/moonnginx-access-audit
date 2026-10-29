@@ -35,6 +35,9 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Enforce the acceptance minimum compiler version
+        run: python tools/check_toolchain.py
+
       - name: Check formatting
         run: moon fmt --check
 
